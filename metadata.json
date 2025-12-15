@@ -1,0 +1,7 @@
+{
+  "name": "LinguaAI - English for Ukrainians",
+  "description": "AI-powered English learning platform focused on correcting grammar errors with literal translation feedback.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
