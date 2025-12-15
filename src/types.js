@@ -1,0 +1,8 @@
+export const View = {
+  LANDING: 'LANDING',
+  COURSE_A2: 'COURSE_A2',
+  COURSE_B1: 'COURSE_B1',
+  LOGIN: 'LOGIN',
+  REGISTER: 'REGISTER',
+  CONTACT: 'CONTACT'
+};
