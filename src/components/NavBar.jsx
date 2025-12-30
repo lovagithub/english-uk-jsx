@@ -1,59 +1,84 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import logo_english from "../assets/logo_english.jpeg";
+import logo from "../assets/logo_english.jpeg";
 
 const NavBar = ({ currentUser, onLogout }) => {
   const navigate = useNavigate();
 
   return (
-    <header className="header">
-      {/* LOGO */}
-      <div
-        className="logo"
-        onClick={() => navigate("/")}
-        style={{ cursor: "pointer" }}
-      >
-        <img src={logo_english} alt="English Tutor Logo" />
-        <div>
-          <div className="logo-title">English Tutor</div>
-          <div className="logo-subtitle">
-            Practice speaking — instant feedback
-          </div>
-        </div>
-      </div>
+    <header className="navbar">
+      {/* VIKTIG WRAPPER – MATCHAR CSS */}
+      <div className="navbar-inner">
 
-      {/* NAV */}
-      <nav className="nav">
-        {/* DROPDOWN */}
-        <div className="dropdown">
-          <button className="btn nav-btn">Köp kurs ▾</button>
-          <div className="dropdown-content">
-            <button onClick={() => navigate("/course/a2")}>Nivå A2</button>
-            <button onClick={() => navigate("/course/b1")}>Nivå B1</button>
+        {/* LEFT: LOGO */}
+        <div
+          className="navbar-left"
+          onClick={() => navigate("/")}
+        >
+          <img
+            src={logo}
+            alt="English Tutor Logo"
+            className="navbar-logo"
+          />
+
+          <div className="navbar-brand">
+            <div className="navbar-title">English Tutor</div>
+            <div className="navbar-subtitle">
+              Practice speaking — instant feedback
+            </div>
           </div>
         </div>
 
-        {/* CONTACT */}
-        <Link to="/contact" className="btn nav-btn">
-          Kontakt
-        </Link>
+        {/* RIGHT: NAV */}
+        <nav className="navbar-right">
+          {/* BUY COURSE */}
+          <div className="navbar-dropdown">
+            <button className="navbar-link">
+              Köp kurs ▾
+            </button>
 
-        {/* AUTH */}
-        {currentUser ? (
-          <>
-            <button className="btn nav-btn" disabled>
-              Hej, {currentUser.name?.split(" ")[0] || currentUser.student_id}
-            </button>
-            <button className="btn btn-primary" onClick={onLogout}>
-              Logga ut
-            </button>
-          </>
-        ) : (
-          <Link to="/login" className="btn btn-primary">
-            Logga in
+            <div className="navbar-dropdown-menu">
+              <button onClick={() => navigate("/course/a2")}>
+                Nivå A2
+              </button>
+              <button onClick={() => navigate("/course/b1")}>
+                Nivå B1
+              </button>
+            </div>
+          </div>
+
+          {/* CONTACT */}
+          <Link to="/contact" className="navbar-link">
+            Kontakt
           </Link>
-        )}
-      </nav>
+
+          {/* AUTH */}
+          {currentUser ? (
+            <>
+              <span className="navbar-user">
+                Hej,{" "}
+                {currentUser.name?.split(" ")[0] ||
+                  currentUser.student_id}
+              </span>
+
+              <button
+                className="navbar-btn navbar-btn-outline"
+                onClick={onLogout}
+              >
+                Logga ut
+              </button>
+            </>
+          ) : (
+            <Link
+              to="/login"
+              className="navbar-btn navbar-btn-primary"
+            >
+              Logga in
+            </Link>
+          )}
+        </nav>
+
+      </div>
     </header>
   );
 };
