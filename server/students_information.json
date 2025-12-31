@@ -85,7 +85,6 @@
           "title": "Advanced English",
           "paid": true,
           "currency": "SEK",
-        
           "course_start": "2025-11-25T13:00:00Z"
         },
         {
@@ -95,6 +94,15 @@
           "course_start": "2025-11-26T10:00:00Z"
         }
       ]
+    },
+    {
+      "student_id": "S-1767189942380",
+      "name": "Nina",
+      "phone": "0728734567",
+      "address": "Sveavägen 10",
+      "level": "A1",
+      "registration_date": "2025-12-31T14:05:42.380Z",
+      "courses": []
     }
   ]
 }

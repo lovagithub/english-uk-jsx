@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { MockAuthService } from "../services/mockDatabase";
 import { Loader2 } from "lucide-react";
 
 const LoginPage = ({ onLogin }) => {
@@ -12,14 +11,29 @@ const LoginPage = ({ onLogin }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const user = await MockAuthService.login(studentId);
-    if (user) {
+    setError("");
+
+    try {
+      const res = await fetch("http://localhost:3000/students");
+      const students = await res.json();
+
+      const user = students.find(
+        (s) => s.student_id === studentId
+      );
+
+      if (!user) {
+        setError("Fel student-ID");
+        setLoading(false);
+        return;
+      }
+
       onLogin(user);
       navigate("/");
-    } else {
-      setError("Fel student-ID");
+    } catch (err) {
+      setError("Kunde inte logga in");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -29,14 +43,15 @@ const LoginPage = ({ onLogin }) => {
 
         <form onSubmit={handleLogin}>
           <input
-            placeholder="Student ID (S-001)"
+            placeholder="Student ID (t.ex. S-001)"
             value={studentId}
             onChange={(e) => setStudentId(e.target.value)}
+            required
           />
 
           {error && <p className="error">{error}</p>}
 
-          <button className="btn btn-primary">
+          <button className="btn btn-primary" disabled={loading}>
             {loading ? <Loader2 className="animate-spin" /> : "Logga in"}
           </button>
         </form>

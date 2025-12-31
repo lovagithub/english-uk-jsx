@@ -1,23 +1,44 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { MockAuthService } from "../services/mockDatabase";
 import { Loader2 } from "lucide-react";
 
 const RegisterPage = ({ onLogin }) => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ name: "", phone: "", address: "" });
+
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    address: "",
+  });
+
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const user = await MockAuthService.register(
-      formData.name,
-      formData.phone,
-      formData.address
-    );
-    onLogin(user);
-    navigate("/");
+
+    try {
+      const res = await fetch("http://localhost:3000/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        throw new Error("Registration failed");
+      }
+
+      const user = await res.json();
+      onLogin(user);
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+      alert("Kunde inte registrera användare");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -26,11 +47,37 @@ const RegisterPage = ({ onLogin }) => {
         <h2>Skapa konto</h2>
 
         <form onSubmit={handleSubmit}>
-          <input placeholder="Namn" onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-          <input placeholder="Telefon" onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
-          <input placeholder="Adress" onChange={(e) => setFormData({ ...formData, address: e.target.value })} />
+          <input
+            type="text"
+            placeholder="Namn"
+            value={formData.name}
+            onChange={(e) =>
+              setFormData({ ...formData, name: e.target.value })
+            }
+            required
+          />
 
-          <button className="btn btn-primary">
+          <input
+            type="text"
+            placeholder="Telefon"
+            value={formData.phone}
+            onChange={(e) =>
+              setFormData({ ...formData, phone: e.target.value })
+            }
+            required
+          />
+
+          <input
+            type="text"
+            placeholder="Adress"
+            value={formData.address}
+            onChange={(e) =>
+              setFormData({ ...formData, address: e.target.value })
+            }
+            required
+          />
+
+          <button className="btn btn-primary" disabled={loading}>
             {loading ? <Loader2 className="animate-spin" /> : "Registrera"}
           </button>
         </form>

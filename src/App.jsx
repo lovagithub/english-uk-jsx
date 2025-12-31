@@ -7,10 +7,8 @@ import CoursePage from "./pages/CoursePage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import ContactPage from "./pages/ContactPage.jsx";
-import A2Preview from "./pages/A2Preview";
-import B1Preview from "./pages/B1Preview";
-
-
+import A2Preview from "./pages/A2Preview.jsx";
+import B1Preview from "./pages/B1Preview.jsx";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -23,22 +21,23 @@ function App() {
       <NavBar currentUser={currentUser} onLogout={handleLogout} />
 
       <Routes>
+        {/* Public */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route path="/preview/a2" element={<A2Preview />} />
         <Route path="/preview/b1" element={<B1Preview />} />
-        <Route path="/" element={<LandingPage />} />
 
+        {/* Auth */}
         <Route
           path="/login"
           element={<LoginPage onLogin={handleLogin} />}
         />
-
         <Route
           path="/register"
           element={<RegisterPage onLogin={handleLogin} />}
         />
 
-        <Route path="/contact" element={<ContactPage />} />
-
+        {/* Protected courses */}
         <Route
           path="/course/a2"
           element={
