@@ -103,6 +103,15 @@
       "level": "A1",
       "registration_date": "2025-12-31T14:05:42.380Z",
       "courses": []
+    },
+    {
+      "student_id": "S-1767458583516",
+      "name": "Lisa Andersson",
+      "phone": "0734567823",
+      "address": "Falugatan 23",
+      "level": "A1",
+      "registration_date": "2026-01-03T16:43:03.517Z",
+      "courses": []
     }
   ]
 }

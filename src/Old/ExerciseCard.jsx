@@ -1,179 +1,168 @@
-import React, { useState, useRef } from 'react';
-import { Mic, Send, Lock, RotateCcw, VolumeX, Loader2 } from 'lucide-react';
-import { analyzeSubmission } from '../services/geminiService.js';
+import { useState, useRef } from "react";
+import { Lock, Mic, Send, Loader2 } from "lucide-react";
 
 const ExerciseCard = ({ exercise, isPaidUser }) => {
-  const [inputText, setInputText] = useState('');
-  const [isRecording, setIsRecording] = useState(false);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [result, setResult] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
-  
-  const mediaRecorderRef = useRef(null);
-  const audioChunksRef = useRef([]);
+  const isLocked = exercise.isPremium && !isPaidUser;
 
-  const handleTextSubmit = async () => {
-    if (!inputText.trim()) return;
-    processInput(inputText, 'text');
+  const [answer, setAnswer] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [listening, setListening] = useState(false);
+
+  const recognitionRef = useRef(null);
+
+  /* ===========================
+     🎤 SPEECH TO TEXT
+  =========================== */
+  const handleSpeak = () => {
+    if (isLocked || loading) return;
+
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      alert("Röstigenkänning stöds inte i denna webbläsare.");
+      return;
+    }
+
+    // Om inspelning redan pågår → stoppa
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      recognitionRef.current = null;
+      setListening(false);
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      setListening(true);
+    };
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setAnswer((prev) => (prev ? prev + " " : "") + transcript);
+    };
+
+    recognition.onerror = (event) => {
+      // no-speech och aborted är normala tillstånd
+      if (event.error === "no-speech" || event.error === "aborted") {
+        return;
+      }
+
+      if (event.error === "not-allowed") {
+        alert("Tillåt mikrofonen i webbläsaren.");
+        return;
+      }
+
+      console.warn("Speech recognition error:", event.error);
+    };
+
+    recognition.onend = () => {
+      setListening(false);
+      recognitionRef.current = null;
+    };
+
+    recognition.start();
+    recognitionRef.current = recognition;
   };
 
-  const startRecording = async () => {
+  /* ===========================
+     🧠 AI CHECK (GEMINI – BACKEND)
+     (Backend saknas → hanteras snyggt)
+  =========================== */
+  const handleCheck = async () => {
+    if (isLocked || !answer.trim()) return;
+
+    setLoading(true);
+    setFeedback("");
+
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      audioChunksRef.current = [];
+      const res = await fetch("/api/gemini/check-answer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question: exercise.question,
+          answer,
+          level: "A2",
+        }),
+      });
 
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunksRef.current.push(event.data);
-        }
-      };
+      if (!res.ok) {
+        throw new Error("Backend not available");
+      }
 
-      mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-        processInput(audioBlob, 'audio');
-        stream.getTracks().forEach(track => track.stop());
-      };
-
-      mediaRecorder.start();
-      setIsRecording(true);
-      setErrorMsg(null);
+      const data = await res.json();
+      setFeedback(data.feedback);
     } catch (err) {
-      console.error(err);
-      setErrorMsg("Microphone access denied or not available.");
-    }
-  };
-
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-    }
-  };
-
-  const processInput = async (input, type) => {
-    setIsAnalyzing(true);
-    setResult(null);
-    try {
-      const analysis = await analyzeSubmission(input, exercise.question, type);
-      setResult(analysis);
-    } catch (e) {
-      setErrorMsg("Failed to analyze. Please try again.");
+      setFeedback(
+        "AI-feedback är inte aktiverad ännu. Funktionen kommer snart."
+      );
     } finally {
-      setIsAnalyzing(false);
+      setLoading(false);
     }
   };
-
-  const resetExercise = () => {
-    setResult(null);
-    setInputText('');
-    setErrorMsg(null);
-  };
-
-  // Locked State
-  if (exercise.isPremium && !isPaidUser) {
-    return (
-      <div className="locked-exercise">
-        <div className="locked-overlay-icon">
-          <Lock size={32} style={{ color: '#94a3b8', marginBottom: '0.5rem' }} />
-          <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Premium Only</span>
-        </div>
-        <h3 className="exercise-title" style={{filter: 'blur(2px)'}}>{exercise.title}</h3>
-        <p style={{filter: 'blur(2px)'}}>{exercise.question}</p>
-      </div>
-    );
-  }
 
   return (
-    <div className="exercise-card">
-      <h3 className="exercise-title">
+    <div className={`exercise-card ${isLocked ? "locked-opacity" : ""}`}>
+      <div className="card-header">
         <span className="exercise-id">{exercise.id}</span>
-        {exercise.title}
-      </h3>
-      <p className="exercise-question">Question: {exercise.question}</p>
+        <h3 className="exercise-title">{exercise.title}</h3>
+      </div>
 
-      {/* Input Area */}
-      {!result && (
-        <div>
-          <textarea
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            placeholder="Type your answer here..."
-            className="input-textarea"
-            disabled={isAnalyzing || isRecording}
-          />
-          
-          <div className="controls">
-            <button
-              onClick={isRecording ? stopRecording : startRecording}
-              disabled={isAnalyzing}
-              className={`btn-control btn-record ${isRecording ? 'recording' : ''}`}
-            >
-              {isRecording ? <><VolumeX size={20}/> Stop</> : <><Mic size={20}/> Speak</>}
-            </button>
-            
-            <button
-              onClick={handleTextSubmit}
-              disabled={!inputText.trim() || isAnalyzing || isRecording}
-              className="btn-control btn-check"
-            >
-               {isAnalyzing ? <Loader2 className="animate-spin" size={20} /> : <><Send size={20}/> Check</>}
-            </button>
-          </div>
-          {errorMsg && <p style={{color: 'var(--error)', textAlign: 'center', marginTop: '0.5rem'}}>{errorMsg}</p>}
+      <p className="exercise-question">
+        <strong>Question:</strong> {exercise.question}
+      </p>
+
+      <textarea
+        className="exercise-textarea"
+        placeholder="Type or speak your answer..."
+        value={answer}
+        onChange={(e) => setAnswer(e.target.value)}
+        disabled={isLocked || loading}
+      />
+
+      <div className="controls">
+        <button
+          className={`btn-control btn-record ${
+            listening ? "recording" : ""
+          }`}
+          onClick={handleSpeak}
+          disabled={isLocked || loading}
+        >
+          <Mic size={18} />
+          {listening ? "Listening..." : "Speak"}
+        </button>
+
+        <button
+          className="btn-control btn-check"
+          onClick={handleCheck}
+          disabled={isLocked || loading}
+        >
+          {loading ? (
+            <Loader2 className="animate-spin" size={18} />
+          ) : (
+            <>
+              <Send size={18} /> Check
+            </>
+          )}
+        </button>
+      </div>
+
+      {feedback && (
+        <div className="ai-feedback">
+          <strong>AI Feedback:</strong>
+          <p>{feedback}</p>
         </div>
       )}
 
-      {/* Result Area */}
-      {result && (
-        <div className={`result-box ${result.isCorrect ? 'result-correct' : 'result-incorrect'}`}>
-          
-          <div className="text-center" style={{marginBottom: '1rem'}}>
-             {result.isCorrect ? (
-               <div>
-                 <div style={{fontSize: '3rem', marginBottom: '0.5rem'}} className="animate-bounce">🎉</div>
-                 <h4 style={{fontSize: '1.5rem', fontWeight: 700, color: '#15803d', margin: 0}}>Чудово!</h4>
-               </div>
-             ) : (
-               <div>
-                 <div style={{fontSize: '3rem', marginBottom: '0.5rem'}}>🤔</div>
-                 <h4 style={{fontSize: '1.5rem', fontWeight: 700, color: '#b91c1c', margin: 0}}>Майже...</h4>
-               </div>
-             )}
-          </div>
-
-          <div style={{textAlign: 'left'}}>
-            <div className="feedback-section fb-user">
-              <span className="feedback-label">Ви сказали:</span>
-              <p className="feedback-text">"{result.transcribedText}"</p>
-            </div>
-
-            {!result.isCorrect && (
-               <div className="feedback-section fb-error">
-                <span className="feedback-label" style={{color: '#dc2626'}}>Як це звучить (буквально):</span>
-                <p className="feedback-text">"{result.literalUkrainianTranslation}"</p>
-              </div>
-            )}
-
-            <div className="feedback-section fb-correct">
-              <span className="feedback-label" style={{color: '#16a34a'}}>{result.isCorrect ? 'Правильно:' : 'Краще сказати:'}</span>
-              <p className="feedback-text">{result.correctEnglishPhrase}</p>
-            </div>
-
-            <div className="feedback-section fb-explain">
-              <span className="feedback-label" style={{color: '#4f46e5'}}>Пояснення:</span>
-              <p className="feedback-text" style={{fontSize: '1rem'}}>{result.explanation}</p>
-            </div>
-          </div>
-
-          <button 
-            onClick={resetExercise}
-            className="btn btn-secondary"
-            style={{width: '100%', marginTop: '1.5rem', justifyContent: 'center'}}
-          >
-            <RotateCcw size={16} /> Try Another
-          </button>
+      {isLocked && (
+        <div className="lock-overlay">
+          <Lock size={16} /> Endast i fullversionen
         </div>
       )}
     </div>

@@ -1,89 +1,50 @@
+// ===============================
+// 1️⃣ Ladda .env FÖRST (viktigt)
+// ===============================
+import dotenv from "dotenv";
+
+const result = dotenv.config();
+
+// Debug-loggar (kan tas bort senare)
+console.log("dotenv result:", result.error ? result.error : "OK");
+console.log("OPENAI_API_KEY exists:", !!process.env.OPENAI_API_KEY);
+
+// Stoppa servern direkt om API-nyckeln saknas
+if (!process.env.OPENAI_API_KEY) {
+  console.error("❌ OPENAI_API_KEY saknas. Kontrollera .env-filen.");
+  process.exit(1);
+}
+
+// ===============================
+// 2️⃣ Importera resten
+// ===============================
 import express from "express";
 import cors from "cors";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import aiRoutes from "./routes/ai.js";
 
-/* =========================
-   Setup
-========================= */
+// ===============================
+// 3️⃣ Skapa appen
+// ===============================
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
-/* =========================
-   Paths (ESM)
-========================= */
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// ===============================
+// 4️⃣ Routes
+// ===============================
+app.use("/api", aiRoutes);
 
-const studentsPath = path.join(__dirname, "students_information.json");
-
-/* =========================
-   Helpers
-========================= */
-function readStudents() {
-  return JSON.parse(fs.readFileSync(studentsPath, "utf-8"));
-}
-
-function writeStudents(data) {
-  fs.writeFileSync(studentsPath, JSON.stringify(data, null, 2));
-}
-
-/* =========================
-   Routes
-========================= */
-
-// Health check
+// Hälsokontroll
 app.get("/", (req, res) => {
   res.send("✅ Backend is running");
 });
 
-// Get all students
-app.get("/students", (req, res) => {
-  try {
-    const data = readStudents();
-    res.json(data.students);
-  } catch {
-    res.status(500).json({ error: "Could not read students" });
-  }
-});
-
-// ✅ Register student (MATCHAR FRONTEND)
-app.post("/register", (req, res) => {
-  try {
-    const { name, phone, address } = req.body;
-
-    if (!name || !phone || !address) {
-      return res.status(400).json({ error: "All fields required" });
-    }
-
-    const data = readStudents();
-
-    const newStudent = {
-      student_id: `S-${Date.now()}`,
-      name,
-      phone,
-      address,
-      level: "A1",
-      registration_date: new Date().toISOString(),
-      courses: [],
-    };
-
-    data.students.push(newStudent);
-    writeStudents(data);
-
-    res.status(201).json(newStudent);
-  } catch (err) {
-    res.status(500).json({ error: "Registration failed" });
-  }
-});
-
-/* =========================
-   Start server
-========================= */
+// ===============================
+// 5️⃣ Starta servern
+// ===============================
 const PORT = 3000;
+
 app.listen(PORT, () => {
   console.log(`✅ Backend running on http://localhost:${PORT}`);
 });
-
