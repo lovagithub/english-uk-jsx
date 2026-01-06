@@ -1,36 +1,33 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
 const LoginPage = ({ onLogin }) => {
-  const navigate = useNavigate();
-  const [studentId, setStudentId] = useState("");
+  const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     try {
-      const res = await fetch("http://localhost:3000/students");
-      const students = await res.json();
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
 
-      const user = students.find(
-        (s) => s.student_id === studentId
-      );
+      const data = await res.json();
 
-      if (!user) {
-        setError("Fel student-ID");
-        setLoading(false);
-        return;
+      if (!res.ok) {
+        throw new Error(data.error || "Login failed");
       }
 
-      onLogin(user);
+      onLogin(data);
       navigate("/");
     } catch (err) {
-      setError("Kunde inte logga in");
+      alert("Kunde inte logga in: " + err.message);
     } finally {
       setLoading(false);
     }
@@ -41,24 +38,21 @@ const LoginPage = ({ onLogin }) => {
       <div className="auth-card">
         <h2>Logga in</h2>
 
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleSubmit}>
           <input
-            placeholder="Student ID (t.ex. S-001)"
-            value={studentId}
-            onChange={(e) => setStudentId(e.target.value)}
+            type="text"
+            placeholder="Ditt namn"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             required
           />
 
-          {error && <p className="error">{error}</p>}
-
-          <button className="btn btn-primary" disabled={loading}>
+          <button disabled={loading} className="btn btn-primary">
             {loading ? <Loader2 className="animate-spin" /> : "Logga in"}
           </button>
         </form>
 
-        <p>
-          Inget konto? <Link to="/register">Registrera dig</Link>
-        </p>
+        <Link to="/register">Skapa konto</Link>
       </div>
     </div>
   );

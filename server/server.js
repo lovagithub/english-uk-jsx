@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+import dotenv from "dotenv"; 
 dotenv.config();
 
 
@@ -10,7 +10,6 @@ import buyCourseRoutes from "./routes/buyCourse.js";
 import { readStudents, writeStudents } from "./utils/studentsDb.js";
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
@@ -29,9 +28,8 @@ app.post("/register", (req, res) => {
     name,
     phone,
     address,
-    level: "A2",
-    registration_date: new Date().toISOString(),
     courses: [],
+    registration_date: new Date().toISOString(),
   };
 
   db.students.push(newStudent);
@@ -40,17 +38,34 @@ app.post("/register", (req, res) => {
   res.json(newStudent);
 });
 
+/* ================= LOGIN BY NAME ================= */
+app.post("/api/login", (req, res) => {
+  const { name } = req.body;
+
+  if (!name) {
+    return res.status(400).json({ error: "Name is required" });
+  }
+
+  const db = readStudents();
+  const student = db.students.find(
+    (s) => s.name.toLowerCase() === name.toLowerCase()
+  );
+
+  if (!student) {
+    return res.status(404).json({ error: "Student not found" });
+  }
+
+  res.json(student);
+});
+
 /* ================= API ROUTES ================= */
-/* 🔴 DENNA RAD SAKNADES HOS DIG */
 app.use("/api", aiRoutes);
 app.use("/api", buyCourseRoutes);
 
-/* ================= HEALTH CHECK ================= */
 app.get("/", (req, res) => {
-  res.send("Backend is running");
+  res.send("Backend OK");
 });
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Backend running on http://localhost:${PORT}`);
+app.listen(3000, () => {
+  console.log("Backend running on http://localhost:3000");
 });

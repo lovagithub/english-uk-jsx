@@ -1,42 +1,81 @@
 import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Lock, ShoppingCart, Loader2 } from "lucide-react";
 import ExerciseCard from "../components/ExerciseCard";
 import "../course.css";
 
-const CoursePage = ({ level = "A2", currentUser, onBuyCourse }) => {
+const CoursePage = ({ currentUser }) => {
+  const navigate = useNavigate();
+  const { level } = useParams();
   const [buying, setBuying] = useState(false);
 
-  const courseId = level === "A2" ? "C-ENG-A2" : "C-ENG-B1";
-  const courseTitle = `Engelsk Grammatik – Nivå ${level}`;
+  const courseId = level === "a2" ? "C-ENG-A2" : "C-ENG-B1";
+  const courseTitle = `Engelsk Grammatik – Nivå ${level.toUpperCase()}`;
 
   const hasAccess =
     currentUser?.courses?.some(
       (c) => c.course_id === courseId && c.paid
     ) || false;
 
-  const handleBuy = async () => {
-    if (!currentUser) {
-      alert("Du måste logga in först");
-      return;
-    }
+  const handleBuy = () => {
     setBuying(true);
-    await onBuyCourse(courseId, courseTitle);
-    setBuying(false);
+    navigate(`/buy/${level}`);
   };
 
   const exercises =
-    level === "A2"
+    level === "a2"
       ? [
-          { id: "1", title: "Present Simple – Introductions", question: "Tell me your name and how old you are.", isPremium: false },
-          { id: "2", title: "Daily Routine", question: "What do you usually do in the morning?", isPremium: false },
-          { id: "3", title: "Past Simple – Last Weekend", question: "What did you do last Saturday?", isPremium: true },
-          { id: "4", title: "Comparatives", question: "Compare Kyiv and Stockholm. Which is bigger?", isPremium: true },
+          {
+            id: "1",
+            title: "Present Simple – Introductions",
+            question: "Tell me your name and how old you are.",
+            isPremium: false,
+          },
+          {
+            id: "2",
+            title: "Daily Routine",
+            question: "What do you usually do in the morning?",
+            isPremium: false,
+          },
+          {
+            id: "3",
+            title: "Past Simple – Last Weekend",
+            question: "What did you do last Saturday?",
+            isPremium: true,
+          },
+          {
+            id: "4",
+            title: "Comparatives",
+            question: "Compare Kyiv and Stockholm. Which is bigger?",
+            isPremium: true,
+          },
         ]
       : [
-          { id: "1", title: "Present Perfect vs Past Simple", question: "Have you ever been to London? When did you go?", isPremium: false },
-          { id: "2", title: "Future Forms", question: "What are your plans for next summer?", isPremium: false },
-          { id: "3", title: "Second Conditional", question: "What would you do if you won a million dollars?", isPremium: true },
-          { id: "4", title: "Passive Voice", question: "Describe how your favorite dish is cooked.", isPremium: true },
+          {
+            id: "1",
+            title: "Problem Solving",
+            question:
+              "Describe a situation where you had to solve a problem at work or school.",
+            isPremium: false,
+          },
+          {
+            id: "2",
+            title: "Future Forms",
+            question: "What are your plans for next summer?",
+            isPremium: false,
+          },
+          {
+            id: "3",
+            title: "Second Conditional",
+            question: "What would you do if you won a million dollars?",
+            isPremium: true,
+          },
+          {
+            id: "4",
+            title: "Passive Voice",
+            question: "Describe how your favorite dish is cooked.",
+            isPremium: true,
+          },
         ];
 
   return (
@@ -44,7 +83,10 @@ const CoursePage = ({ level = "A2", currentUser, onBuyCourse }) => {
       <header className="course-header">
         <div>
           <h1>
-            Engelsk Grammatik <span className="level-highlight">Nivå {level}</span>
+            Engelsk Grammatik{" "}
+            <span className="level-highlight">
+              Nivå {level.toUpperCase()}
+            </span>
           </h1>
           <p>Öva på att tala och skriva. Få omedelbar återkoppling.</p>
         </div>
