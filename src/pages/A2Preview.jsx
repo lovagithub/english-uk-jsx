@@ -29,7 +29,12 @@ const A2Preview = () => {
       <div className="locked-course-card">
         <h3>Vill du ha fler övningar?</h3>
         <p>Logga in för att låsa upp hela kursen.</p>
-        <button className="btn-buy" onClick={() => navigate("/login")}>
+
+        {/* 👇 HIT GÅR ANVÄNDAREN FÖR KÖP */}
+        <button
+          className="btn-buy"
+          onClick={() => navigate("/buy/a2")}
+        >
           Logga in för full kurs
         </button>
       </div>

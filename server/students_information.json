@@ -112,6 +112,77 @@
       "level": "A1",
       "registration_date": "2026-01-03T16:43:03.517Z",
       "courses": []
+    },
+    {
+      "student_id": "S-1767636365420",
+      "name": "Lisa Andersson",
+      "phone": "0765673425",
+      "address": "Falugatan 12",
+      "level": "A2",
+      "registration_date": "2026-01-05T18:06:05.420Z",
+      "courses": []
+    },
+    {
+      "student_id": "S-1767636582331",
+      "name": "Lisa Andersson",
+      "phone": "0723452356",
+      "address": "Falugatan 12",
+      "level": "A2",
+      "registration_date": "2026-01-05T18:09:42.331Z",
+      "courses": []
+    },
+    {
+      "student_id": "S-1767636700492",
+      "name": "Lisa Andersson",
+      "phone": "0745673456",
+      "address": "Falugatan 12",
+      "level": "A2",
+      "registration_date": "2026-01-05T18:11:40.492Z",
+      "courses": []
+    },
+    {
+      "student_id": "S-1767639189815",
+      "name": "Lisa Andersson",
+      "phone": "0734563478",
+      "address": "Falugatan 12",
+      "level": "A2",
+      "registration_date": "2026-01-05T18:53:09.815Z",
+      "courses": []
+    },
+    {
+      "student_id": "S-1767710637532",
+      "name": "Lisa Andersson",
+      "phone": "045623459",
+      "address": "Falugatan 23",
+      "level": "A2",
+      "registration_date": "2026-01-06T14:43:57.532Z",
+      "courses": []
+    },
+    {
+      "student_id": "S-1767710737320",
+      "name": " jdde skaka",
+      "phone": "02834334344",
+      "address": "GHJewefwe",
+      "level": "A2",
+      "registration_date": "2026-01-06T14:45:37.320Z",
+      "courses": []
+    },
+    {
+      "student_id": "S-1767710854078",
+      "name": "Lisa Andersson",
+      "phone": "073456234",
+      "address": "Falugatan 45",
+      "level": "A2",
+      "registration_date": "2026-01-06T14:47:34.078Z",
+      "courses": [
+        {
+          "course_id": "A2",
+          "title": "English A2",
+          "paid": true,
+          "currency": "SEK",
+          "course_start": "2026-01-06T14:48:01.150Z"
+        }
+      ]
     }
   ]
 }
