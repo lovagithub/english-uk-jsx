@@ -14,12 +14,12 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
 
   /* ===========================
      🎤 SPEECH TO TEXT
-     Startar NYTT försök
+     👉 STARTAR NYTT FÖRSÖK
   =========================== */
   const handleSpeak = () => {
     if (isLocked || loading) return;
 
-    // 🔄 Nytt försök → rensa allt
+    // 🔥 Rensa ALLT endast när Speak startas
     setAnswer("");
     setFeedback("");
 
@@ -31,7 +31,6 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
       return;
     }
 
-    // Stoppa ev. pågående lyssning
     if (recognitionRef.current) {
       recognitionRef.current.stop();
       recognitionRef.current = null;
@@ -51,9 +50,10 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
       setAnswer(transcript);
     };
 
-    recognition.onerror = () => {
-      setListening(false);
-      recognitionRef.current = null;
+    recognition.onerror = (event) => {
+      if (event.error === "not-allowed") {
+        alert("Tillåt mikrofonen i webbläsaren.");
+      }
     };
 
     recognition.onend = () => {
@@ -67,7 +67,7 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
 
   /* ===========================
      🧠 AI CHECK
-     Utvärderar – rensar INTE
+     👉 UTVÄRDERAR, RENSAR INTE
   =========================== */
   const handleCheck = async () => {
     if (isLocked || !answer.trim()) return;
@@ -90,28 +90,20 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
   };
 
   /* ===========================
-     🎯 KORREKT FEEDBACK-LOGIK
-     Endast AI-godkännande = Hurra
+     🎭 FEEDBACK LOGIK
   =========================== */
-  const feedbackText = feedback.toLowerCase();
-
-  const positiveKeywords = [
-    "correct",
-    "well done",
-    "good job",
-    "excellent",
-    "perfect",
-    "that's right",
-    "you are right",
-  ];
-
-  const isGoodAnswer =
+  const isBadAnswer =
     feedback &&
-    positiveKeywords.some((word) => feedbackText.includes(word));
+    (
+      feedback.toLowerCase().includes("try") ||
+      feedback.toLowerCase().includes("not") ||
+      feedback.toLowerCase().includes("didn't") ||
+      feedback.toLowerCase().includes("incorrect") ||
+      feedback.toLowerCase().includes("confusion")
+    );
 
-  /* ===========================
-     🧱 RENDER
-  =========================== */
+  const isGoodAnswer = feedback && !isBadAnswer;
+
   return (
     <div className={`exercise-card ${isLocked ? "locked-opacity" : ""}`}>
       <div className="card-header">
@@ -158,28 +150,34 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
         </button>
       </div>
 
+      {/* ===========================
+          🧠 AI FEEDBACK
+      =========================== */}
       {feedback && (
-        <>
-          <div className="ai-feedback">
-            <strong>AI Feedback:</strong>
-            <p>{feedback}</p>
-          </div>
+        <div className="ai-feedback">
+          <strong>AI Feedback:</strong>
+          <p>{feedback}</p>
+        </div>
+      )}
 
-          <div className="feedback-animation">
-            {isGoodAnswer ? (
-              <div className="happy-anim">
-                <div className="character">🧑‍🎓🎩</div>
-                <div className="fireworks">🎆 🎆 🎆</div>
-                <div className="cheer">Hurra! Bra jobbat!</div>
-              </div>
-            ) : (
-              <div className="sad-anim">
-                <div className="character">😕</div>
-                <div className="boo">Försök igen!</div>
-              </div>
-            )}
-          </div>
-        </>
+      {/* ===========================
+          🎬 VISUELL FEEDBACK
+      =========================== */}
+      {feedback && (
+        <div className="feedback-animation">
+          {isGoodAnswer ? (
+            <div className="happy-anim">
+              <div className="character">🧑‍🎓🎩</div>
+              <div className="fireworks">🎆 🎆 🎆</div>
+              <div className="cheer">Hurra! Bra jobbat!</div>
+            </div>
+          ) : (
+            <div className="sad-anim">
+              <div className="character">😕</div>
+              <div className="boo">Försök igen!</div>
+            </div>
+          )}
+        </div>
       )}
 
       {isLocked && (
