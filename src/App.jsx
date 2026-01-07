@@ -13,6 +13,8 @@ import B1Preview from "./pages/B1Preview.jsx";
 
 import BuyCourse from "./pages/BuyCourse.jsx";
 import CoursePage from "./pages/CoursePage.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
+
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -44,6 +46,17 @@ function App() {
           path="/register"
           element={<RegisterPage onLogin={handleLogin} />}
         />
+        <Route
+          path="/profile"
+          element={
+            currentUser ? (
+              <ProfilePage currentUser={currentUser} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
 
         {/* ===== GRATIS FÖRHANDSVISNING ===== */}
         

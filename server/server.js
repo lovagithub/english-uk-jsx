@@ -8,10 +8,14 @@ import cors from "cors";
 import aiRoutes from "./routes/ai.js";
 import buyCourseRoutes from "./routes/buyCourse.js";
 import { readStudents, writeStudents } from "./utils/studentsDb.js";
+import demoBuy from "./routes/demoBuy.js";
+
+
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use("/api", demoBuy);
 
 /* ================= REGISTER ================= */
 app.post("/register", (req, res) => {

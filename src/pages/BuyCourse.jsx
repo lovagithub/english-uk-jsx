@@ -1,66 +1,64 @@
-import { useNavigate, useParams } from "react-router-dom";
-import "../course.css";
+import { useParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const BuyCourse = ({ currentUser }) => {
-  const navigate = useNavigate();
   const { level } = useParams();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const course =
-    level === "a2"
-      ? { id: "C-ENG-A2", title: "English A2", price: 199 }
-      : { id: "C-ENG-B1", title: "English B1", price: 399 };
+  const price = level === "A2" ? 199 : 399;
+  const title = `Engelsk Grammatik – Nivå ${level}`;
 
-  const handleBuy = async () => {
-    try {
-      const res = await fetch("/api/buy", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          studentId: currentUser.student_id,
-          course,
-        }),
-      });
+  const handleDemoBuy = async () => {
+    setLoading(true);
 
-      if (!res.ok) {
-        throw new Error("Purchase failed");
-      }
+    const res = await fetch("/api/demo-buy", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        studentId: currentUser.student_id,
+        level
+      }),
+    });
 
-      await res.json();
+    const data = await res.json();
+
+    setLoading(false);
+
+    if (res.ok) {
+      alert("✅ Demo-köp genomfört!");
       navigate(`/course/${level}`);
-    } catch (err) {
-      alert("Kunde inte genomföra köpet");
-      console.error(err);
+    } else {
+      alert(data.error || "Något gick fel");
     }
   };
 
   return (
-    <div className="course-page">
-      <h1>Köp kurs</h1>
+    <div style={{ maxWidth: 600, margin: "2rem auto" }}>
+      <h1>Köp kurs (Demo)</h1>
 
-      <div className="locked-course-card">
-        <p>
-          <strong>Student:</strong> {currentUser.name}
-        </p>
-        <p>
-          <strong>Telefon:</strong> {currentUser.phone}
-        </p>
-        <p>
-          <strong>Adress:</strong> {currentUser.address}
-        </p>
+      <h3>Kvitto</h3>
+      <p><strong>Student:</strong> {currentUser.name}</p>
+      <p><strong>Telefon:</strong> {currentUser.phone}</p>
+      <p><strong>Adress:</strong> {currentUser.address}</p>
 
-        <hr style={{ margin: "1rem 0" }} />
+      <hr />
 
-        <p>
-          <strong>Kurs:</strong> {course.title}
-        </p>
-        <p>
-          <strong>Pris:</strong> {course.price} SEK
-        </p>
+      <p><strong>Kurs:</strong> {title}</p>
+      <p><strong>Pris:</strong> {price} SEK</p>
+      <p><strong>Datum:</strong> {new Date().toLocaleDateString()}</p>
 
-        <button className="btn-buy" onClick={handleBuy}>
-          Köp kurs
-        </button>
-      </div>
+      <button
+        onClick={handleDemoBuy}
+        disabled={loading}
+        style={{ marginTop: "1rem" }}
+      >
+        {loading ? "Genomför..." : "Slutför demo-köp"}
+      </button>
+
+      <p style={{ marginTop: "1rem", fontSize: "0.85rem", color: "#666" }}>
+        Detta är ett demoköp. Ingen riktig betalning sker.
+      </p>
     </div>
   );
 };

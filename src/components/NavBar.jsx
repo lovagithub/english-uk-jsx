@@ -52,9 +52,14 @@ const NavBar = ({ currentUser, onLogout }) => {
             Kontakt
           </Link>
 
-          {/* AUTH */}
+          {/* 🔐 AUTH */}
           {currentUser ? (
             <>
+              {/* 👇 NYTT: MIN PROFIL (endast inloggad) */}
+              <Link to="/profile" className="navbar-link">
+                Min profil
+              </Link>
+
               <span className="navbar-user">
                 Hej,{" "}
                 {currentUser.name?.split(" ")[0] ||
