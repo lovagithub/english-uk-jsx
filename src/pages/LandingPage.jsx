@@ -49,9 +49,9 @@ const LandingPage = () => {
 
           <div className="video-wrapper">
             <iframe
-              src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-              title="How LinguaAI Works"
-              frameBorder="0"
+              src="english_Tutor.mp4"
+              title="How English Tutor Works"
+              
               allowFullScreen
             />
             <div className="video-overlay">
@@ -72,16 +72,16 @@ const LandingPage = () => {
           <div className="stories-grid">
             {[
               {
-                name: "Oksana",
+                name: "Lars",
                 level: "B1",
                 text:
                   "I finally understood why 'I feel myself good' is wrong!"
               },
               {
-                name: "Dmytro",
+                name: "Lisa",
                 level: "A2",
                 text:
-                  "The AI explains rules in Ukrainian instantly."
+                  "The AI explains rules in English instantly."
               },
               {
                 name: "Anna",

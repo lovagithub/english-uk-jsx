@@ -1,6 +1,4 @@
-/* =========================
-   RESET
-========================= */
+
 * {
   margin: 0;
   padding: 0;
@@ -15,9 +13,7 @@ html, body {
   min-height: 100%;
 }
 
-/* =========================
-   VARIABLES
-========================= */
+
 :root {
   --primary: #4f46e5;
   --primary-hover: #4338ca;
@@ -26,14 +22,12 @@ html, body {
   --border: #e5e7eb;
 
   --bg-soft: #f8fafc;
-  --bg-dark: #0f172a;
+  --bg-dark: #0c2869;
 
   --radius: 14px;
 }
 
-/* =========================
-   LAYOUT
-========================= */
+
 main {
   display: flex;
   flex-direction: column;
@@ -65,9 +59,7 @@ main {
   background: var(--bg-soft);
 }
 
-/* =========================
-   HERO
-========================= */
+/* HERO */
 .hero-title {
   font-size: 2.8rem;
   font-weight: 800;
@@ -86,9 +78,7 @@ main {
   justify-content: center;
   gap: 1rem;
 }
-/* =========================
-   HERO BACKGROUND
-========================= */
+/* HERO BACKGROUND */
 
 .hero {
   background: linear-gradient(
@@ -109,9 +99,7 @@ main {
 }
 
 
-/* =========================
-   BUTTONS
-========================= */
+/* BUTTONS  */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -142,9 +130,7 @@ main {
   color: white;
 }
 
-/* =========================
-   VIDEO
-========================= */
+/* VIDEO*/
 .video-wrapper {
   position: relative;
   margin: 2.5rem auto 0;
@@ -152,6 +138,7 @@ main {
   aspect-ratio: 16 / 9;
   border-radius: var(--radius);
   overflow: hidden;
+  background-color: #e0e7ff;
 }
 
 .video-wrapper iframe {
@@ -172,20 +159,20 @@ main {
   gap: 0.5rem;
 }
 
-/* =========================
-   STORIES
-========================= */
+/* STORIES*/
 .stories-grid {
   margin-top: 3rem;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
+  
 }
 
 .story-card {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 2rem;
+  border-color: #4338ca;
 }
 
 .stars {
@@ -221,9 +208,7 @@ main {
   font-size: 0.85rem;
   color: var(--text-muted);
 }
-/* =========================
-   NAVBAR
-========================= */
+/* NAVBAR */
 .navbar {
   position: sticky;
   top: 0;
@@ -343,9 +328,7 @@ main {
 }
 
 
-/* =========================
-   PRICING
-========================= */
+/* PRICING */
 .pricing-section {
   background: linear-gradient(180deg, #0f172a, #020617);
 }
@@ -403,9 +386,7 @@ main {
   padding: 0.3rem 0.7rem;
   border-bottom-left-radius: 8px;
 }
-/* =========================
-   AUTH / LOGIN / REGISTER
-========================= */
+/* AUTH / LOGIN / REGISTER */
 
 .auth-container {
   min-height: calc(100vh - 80px); /* under navbar */
@@ -484,14 +465,14 @@ main {
 }
 
 .footer-links button {
-  background: none;
+  background: #e0e7ff ;
   border: none;
   color: var(--text-secondary);
   margin: 0 0.5rem;
   cursor: pointer;
 }
 .footer-links button:hover { color: var(--primary); } 
- 
+
 .auth-footer {
   margin-top: 1rem;
   font-size: 0.9rem;
@@ -507,9 +488,7 @@ main {
 }
 
 
-/* =========================
-   CONTACT PAGE
-========================= */
+/* CONTACT PAGE */
 
 .contact-wrapper {
   max-width: 1100px;
@@ -523,7 +502,7 @@ main {
   gap: 2rem;
 }
 
-/* LEFT INFO */
+
 .contact-info {
   background: var(--primary);
   color: white;
@@ -580,22 +559,12 @@ main {
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
-  .contact-grid {
-    grid-template-columns: 1fr;
-  }
+  
 }
 
-
-/* =========================
-   RESPONSIVE
-========================= */
 @media (max-width: 900px) {
   .stories-grid,
-  .pricing-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-title {
-    font-size: 2.2rem;
-  }
+  .pricing-grid {grid-template-columns: 1fr;}
+  .contact-grid {grid-template-columns: 1fr;}
+  .hero-title {font-size: 2.2rem;}
 }
