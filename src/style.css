@@ -472,7 +472,26 @@ main {
   justify-content: center;
 }
 
-/* Footer link */
+
+/* Footer */
+.footer {
+  border-top: 1px solid var(--border-color);
+  padding: 3rem 1rem;
+  background-color: white;
+  margin-top: auto;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.footer-links button {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  margin: 0 0.5rem;
+  cursor: pointer;
+}
+.footer-links button:hover { color: var(--primary); } 
+ 
 .auth-footer {
   margin-top: 1rem;
   font-size: 0.9rem;
@@ -483,6 +502,10 @@ main {
   font-weight: 600;
   text-decoration: none;
 }
+.footer-text {
+  margin-top: 1rem;
+}
+
 
 /* =========================
    CONTACT PAGE

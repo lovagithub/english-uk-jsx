@@ -30,7 +30,7 @@ const A2Preview = () => {
         <h3>Vill du ha fler övningar?</h3>
         <p>Logga in för att låsa upp hela kursen.</p>
 
-        {/* 👇 HIT GÅR ANVÄNDAREN FÖR KÖP */}
+       
         <button
           className="btn-buy"
           onClick={() => navigate("/buy/a2")}

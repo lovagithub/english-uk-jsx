@@ -17,7 +17,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/api", demoBuy);
 
-/* ================= REGISTER ================= */
+/* REGISTER */
 app.post("/register", (req, res) => {
   const { name, phone, address } = req.body;
 
@@ -42,7 +42,7 @@ app.post("/register", (req, res) => {
   res.json(newStudent);
 });
 
-/* ================= LOGIN BY NAME ================= */
+/*  LOGIN BY NAME  */
 app.post("/api/login", (req, res) => {
   const { name } = req.body;
 
@@ -62,7 +62,7 @@ app.post("/api/login", (req, res) => {
   res.json(student);
 });
 
-/* ================= API ROUTES ================= */
+/* API ROUTES  */
 app.use("/api", aiRoutes);
 app.use("/api", buyCourseRoutes);
 

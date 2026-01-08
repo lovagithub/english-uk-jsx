@@ -23,7 +23,7 @@ const ContactPage = () => {
     setSubmitted(true);
   };
 
-  /* ================= SUCCESS STATE ================= */
+  
   if (submitted) {
     return (
       <section className="section">
@@ -41,13 +41,13 @@ const ContactPage = () => {
     );
   }
 
-  /* ================= FORM ================= */
+  /* FORM  */
   return (
     <section className="section">
       <div className="contact-wrapper">
         <div className="contact-grid">
           
-          {/* LEFT INFO */}
+          
           <div className="contact-info">
             <h3>Kontaktinformation</h3>
 
@@ -62,7 +62,7 @@ const ContactPage = () => {
             </div>
           </div>
 
-          {/* FORM */}
+          
           <form className="contact-form" onSubmit={handleSubmit}>
             <label>Namn</label>
             <input

@@ -31,7 +31,7 @@ const B1Preview = () => {
         <h3>Vill du ha fler övningar?</h3>
         <p>Lås upp hela B1-kursen med avancerade uppgifter.</p>
 
-        {/* 👇 ALLTID till köp – App.jsx avgör login */}
+        {/* ALLTID till köp – App.jsx avgör login */}
         <button
           className="btn-buy"
           onClick={() => navigate("/buy/b1")}

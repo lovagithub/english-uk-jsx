@@ -7,10 +7,9 @@ const NavBar = ({ currentUser, onLogout }) => {
 
   return (
     <header className="navbar">
-      {/* VIKTIG WRAPPER – MATCHAR CSS */}
+    
       <div className="navbar-inner">
 
-        {/* LEFT: LOGO */}
         <div
           className="navbar-left"
           onClick={() => navigate("/")}
@@ -29,9 +28,9 @@ const NavBar = ({ currentUser, onLogout }) => {
           </div>
         </div>
 
-        {/* RIGHT: NAV */}
+       
         <nav className="navbar-right">
-          {/* BUY COURSE */}
+         
           <div className="navbar-dropdown">
             <button className="navbar-link">
               Köp kurs ▾
@@ -47,15 +46,15 @@ const NavBar = ({ currentUser, onLogout }) => {
             </div>
           </div>
 
-          {/* CONTACT */}
+          
           <Link to="/contact" className="navbar-link">
             Kontakt
           </Link>
 
-          {/* 🔐 AUTH */}
+          
           {currentUser ? (
             <>
-              {/* 👇 NYTT: MIN PROFIL (endast inloggad) */}
+             
               <Link to="/profile" className="navbar-link">
                 Min profil
               </Link>

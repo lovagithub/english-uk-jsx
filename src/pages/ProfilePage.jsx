@@ -3,7 +3,7 @@ import React from "react";
 const ProfilePage = ({ currentUser }) => {
   if (!currentUser) return null;
 
-  // 👇 hitta senast köpta kurs
+  /* hitta senast köpta kurs */
   const lastCourse =
     currentUser.courses && currentUser.courses.length > 0
       ? [...currentUser.courses].sort(
@@ -28,7 +28,7 @@ const ProfilePage = ({ currentUser }) => {
           <strong>Adress:</strong> {currentUser.address}
         </p>
 
-        {/* 👇 SENAST KÖPT KURS */}
+        /* SENAST KÖPT KURS */
         <h3>Senast köpta kurs</h3>
         {lastCourse ? (
           <div className="last-course">
@@ -52,7 +52,7 @@ const ProfilePage = ({ currentUser }) => {
           <p>Ingen kurs köpt ännu.</p>
         )}
 
-        {/* 👇 ALLA KURSER */}
+        /* ALLA KURSER */
         <h3>Mina kurser</h3>
         {currentUser.courses?.length > 0 ? (
           <ul>

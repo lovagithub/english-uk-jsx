@@ -8,7 +8,7 @@ const LandingPage = () => {
   return (
     <main>
 
-      {/* ================= HERO ================= */}
+      
       <section className="section hero">
         <div className="container text-center">
           <h1 className="hero-title">
@@ -42,7 +42,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ================= VIDEO ================= */}
+     
       <section className="section bg-soft">
         <div className="container text-center">
           <h2 className="section-title">How LinguaAI Works</h2>
@@ -62,7 +62,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ================= STORIES ================= */}
+
       <section className="section">
         <div className="container">
           <h2 className="section-title text-center">
@@ -112,7 +112,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ================= PRICING ================= */}
+      
       <section className="section pricing-section">
         <div className="container text-center">
           <h2 className="section-title text-white">Simple Pricing</h2>

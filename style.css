@@ -35,7 +35,7 @@ body {
   line-height: 1.5;
 }
 
-/* Layout Utilities */
+
 .container {
   max-width: 1280px;
   margin: 0 auto;
@@ -101,7 +101,7 @@ body {
   cursor: not-allowed;
 }
 
-/* Header & NavBar Specifics */
+/* Header & NavBar */
 .header {
   position: sticky;
   top: 0;
@@ -109,7 +109,7 @@ body {
   background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border-color);
-  height: 80px; /* Slightly taller for logo */
+  height: 80px; 
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -128,7 +128,7 @@ body {
 .logo img {
   height: 48px;
   width: auto;
-  border-radius: 4px; /* Optional rounded corners */
+  border-radius: 4px; 
 }
 
 .logo-title {
@@ -445,7 +445,7 @@ body {
   top: 0; left: 0; right: 0; bottom: 0;
   background-color: rgba(249, 250, 251, 0.5);
   display: flex;
-  flex-col: column;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   z-index: 10;

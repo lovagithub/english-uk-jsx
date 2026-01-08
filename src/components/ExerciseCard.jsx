@@ -13,13 +13,13 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
   const recognitionRef = useRef(null);
 
   /* ===========================
-     🎤 SPEECH TO TEXT
+     SPEECH TO TEXT
      Startar NYTT försök
   =========================== */
   const handleSpeak = () => {
     if (isLocked || loading) return;
 
-    // 🔄 Nytt försök → rensa allt
+    // Nytt försök → rensa allt
     setAnswer("");
     setFeedback("");
 
@@ -66,7 +66,7 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
   };
 
   /* ===========================
-     🧠 AI CHECK
+     AI CHECK
      Utvärderar – rensar INTE
   =========================== */
   const handleCheck = async () => {
@@ -90,7 +90,7 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
   };
 
   /* ===========================
-     🎯 KORREKT FEEDBACK-LOGIK
+     KORREKT FEEDBACK-LOGIK
      Endast AI-godkännande = Hurra
   =========================== */
   const feedbackText = feedback.toLowerCase();
@@ -110,7 +110,7 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
     positiveKeywords.some((word) => feedbackText.includes(word));
 
   /* ===========================
-     🧱 RENDER
+      RENDER
   =========================== */
   return (
     <div className={`exercise-card ${isLocked ? "locked-opacity" : ""}`}>
