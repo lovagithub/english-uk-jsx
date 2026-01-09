@@ -9,19 +9,21 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
   const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
   const [listening, setListening] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(null); 
 
   const recognitionRef = useRef(null);
 
   /* ===========================
      SPEECH TO TEXT
-     Startar NYTT försök
+     Startar nytt försök
   =========================== */
   const handleSpeak = () => {
     if (isLocked || loading) return;
 
-    // Nytt försök → rensa allt
+    // Reset
     setAnswer("");
     setFeedback("");
+    setIsCorrect(null);
 
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -31,7 +33,6 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
       return;
     }
 
-    // Stoppa ev. pågående lyssning
     if (recognitionRef.current) {
       recognitionRef.current.stop();
       recognitionRef.current = null;
@@ -67,13 +68,13 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
 
   /* ===========================
      AI CHECK
-     Utvärderar – rensar INTE
   =========================== */
   const handleCheck = async () => {
     if (isLocked || !answer.trim()) return;
 
     setLoading(true);
     setFeedback("");
+    setIsCorrect(null);
 
     try {
       const result = await analyzeSubmission(
@@ -81,36 +82,35 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
         exercise.question,
         "text"
       );
+
+      const feedbackText = result.feedback.toLowerCase();
+
+      
+      const negativeKeywords = [
+        "incorrect",
+        "not correct",
+        "wrong",
+        "try again",
+        "mistake",
+        "error",
+      ];
+
+      const failed = negativeKeywords.some(word =>
+        feedbackText.includes(word)
+      );
+
+      setIsCorrect(!failed);
       setFeedback(result.feedback);
     } catch {
       setFeedback("AI-feedback är inte tillgänglig just nu.");
+      setIsCorrect(false);
     } finally {
       setLoading(false);
     }
   };
 
   /* ===========================
-     KORREKT FEEDBACK-LOGIK
-     Endast AI-godkännande = Hurra
-  =========================== */
-  const feedbackText = feedback.toLowerCase();
-
-  const positiveKeywords = [
-    "correct",
-    "well done",
-    "good job",
-    "excellent",
-    "perfect",
-    "that's right",
-    "you are right",
-  ];
-
-  const isGoodAnswer =
-    feedback &&
-    positiveKeywords.some((word) => feedbackText.includes(word));
-
-  /* ===========================
-      RENDER
+     RENDER
   =========================== */
   return (
     <div className={`exercise-card ${isLocked ? "locked-opacity" : ""}`}>
@@ -166,7 +166,7 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
           </div>
 
           <div className="feedback-animation">
-            {isGoodAnswer ? (
+            {isCorrect ? (
               <div className="happy-anim">
                 <div className="character">🧑‍🎓🎩</div>
                 <div className="fireworks">🎆 🎆 🎆</div>

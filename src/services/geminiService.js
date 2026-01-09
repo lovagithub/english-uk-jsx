@@ -20,11 +20,38 @@ export const analyzeSubmission = async (
       throw new Error(err.error || "AI request failed");
     }
 
-    return await response.json();
+    const data = await response.json();
+
+   
+    if (typeof data.isCorrect === "boolean") {
+      return data;
+    }
+
+   
+    const feedbackText = (data.feedback || "").toLowerCase();
+
+    const negativeKeywords = [
+      "incorrect",
+      "not correct",
+      "wrong",
+      "try again",
+      "mistake",
+      "error",
+    ];
+
+    const isCorrect = !negativeKeywords.some(word =>
+      feedbackText.includes(word)
+    );
+
+    return {
+      feedback: data.feedback,
+      isCorrect,
+    };
   } catch (err) {
     console.error("analyzeSubmission error:", err.message);
     return {
       feedback: "Kunde inte kontakta AI-tjänsten.",
+      isCorrect: false,
     };
   }
 };

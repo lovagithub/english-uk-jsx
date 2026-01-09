@@ -18,7 +18,7 @@ const LandingPage = () => {
 
           <p className="hero-subtitle">
             Don't just learn grammar rules. Speak, get corrected, and understand
-            your mistakes through literal Ukrainian translations.
+            your mistakes through literal English translations.
           </p>
 
           <div className="hero-actions">
@@ -42,23 +42,18 @@ const LandingPage = () => {
         </div>
       </section>
 
-     
-      <section className="section bg-soft">
+     <section className="section bg-soft">
         <div className="container text-center">
-          <h2 className="section-title">How LinguaAI Works</h2>
+          <h2 className="section-title">How English Tutor Works</h2>
 
-          <div className="video-wrapper">
-            <iframe
-              src="english_Tutor.mp4"
-              title="How English Tutor Works"
-              
-              allowFullScreen
-            />
-            <div className="video-overlay">
-              <Play size={18} />
-              <span>Watch how our AI analyzes your pronunciation</span>
+            <div className="video-wrapper">
+              <video
+                src="/english_Tutor.mp4"
+                controls
+                preload="metadata"
+                playsInline
+              />
             </div>
-          </div>
         </div>
       </section>
 
