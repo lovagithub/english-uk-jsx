@@ -1,6 +1,5 @@
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { Lock, Mic, Send, Loader2 } from "lucide-react";
-import { analyzeSubmission } from "../services/geminiService";
 
 const ExerciseCard = ({ exercise, isPaidUser }) => {
   const isLocked = exercise.isPremium && !isPaidUser;
@@ -13,30 +12,24 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
 
   const recognitionRef = useRef(null);
 
-  /* ===========================
-     SPEECH TO TEXT
-     Startar nytt försök
-  =========================== */
+  /* --- RÖSTIGENKÄNNING --- */
+
   const handleSpeak = () => {
     if (isLocked || loading) return;
 
-    // Reset
-    setAnswer("");
-    setFeedback("");
-    setIsCorrect(null);
+    if (listening) {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+        setListening(false);
+      }
+      return;
+    }
 
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      alert("Röstigenkänning stöds inte i denna webbläsare.");
-      return;
-    }
-
-    if (recognitionRef.current) {
-      recognitionRef.current.stop();
-      recognitionRef.current = null;
-      setListening(false);
+      alert("Röstigenkänning stöds inte i denna webbläsare. Testa Chrome.");
       return;
     }
 
@@ -49,73 +42,48 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
 
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
-      setAnswer(transcript);
+      setAnswer((prev) => (prev ? prev + " " + transcript : transcript));
     };
 
-    recognition.onerror = () => {
-      setListening(false);
-      recognitionRef.current = null;
-    };
-
-    recognition.onend = () => {
-      setListening(false);
-      recognitionRef.current = null;
-    };
+    recognition.onerror = () => setListening(false);
+    recognition.onend = () => setListening(false);
 
     recognition.start();
     recognitionRef.current = recognition;
   };
 
-  /* ===========================
-     AI CHECK
-  =========================== */
-  const handleCheck = async () => {
+  /* --- RÄTTA SVAR (SIMULERAD) --- */
+  const handleCheck = () => {
     if (isLocked || !answer.trim()) return;
 
     setLoading(true);
     setFeedback("");
     setIsCorrect(null);
 
-    try {
-      const result = await analyzeSubmission(
-        answer,
-        exercise.question,
-        "text"
-      );
+    setTimeout(() => {
+      const wordCount = answer.trim().split(/\s+/).length;
+      let mockFeedback = "";
+      let success = false;
 
-      const feedbackText = result.feedback.toLowerCase();
+      if (wordCount < 3) {
+        mockFeedback = "Det var ett väldigt kort svar. Försök skriva en hel mening!";
+        success = false;
+      } else {
+        mockFeedback = "Bra jobbat! Din mening ser grammatiskt korrekt ut och svarar på frågan.";
+        success = true;
+      }
 
-      
-      const negativeKeywords = [
-        "incorrect",
-        "not correct",
-        "wrong",
-        "try again",
-        "mistake",
-        "error",
-      ];
-
-      const failed = negativeKeywords.some(word =>
-        feedbackText.includes(word)
-      );
-
-      setIsCorrect(!failed);
-      setFeedback(result.feedback);
-    } catch {
-      setFeedback("AI-feedback är inte tillgänglig just nu.");
-      setIsCorrect(false);
-    } finally {
+      setFeedback(mockFeedback);
+      setIsCorrect(success);
       setLoading(false);
-    }
+
+    }, 1500);
   };
 
-  /* ===========================
-     RENDER
-  =========================== */
   return (
-    <div className={`exercise-card ${isLocked ? "locked-opacity" : ""}`}>
+    <div className={`exercise-card ${isLocked ? "locked-state" : ""}`}>
       <div className="card-header">
-        <span className="exercise-id">{exercise.id}</span>
+        <span className="exercise-id">#{exercise.id}</span>
         <h3 className="exercise-title">{exercise.title}</h3>
       </div>
 
@@ -125,7 +93,7 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
 
       <textarea
         className="exercise-textarea"
-        placeholder="Type or speak your answer..."
+        placeholder={isLocked ? "Lås upp kursen för att svara..." : "Type or speak your answer..."}
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
         disabled={isLocked || loading}
@@ -133,14 +101,12 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
 
       <div className="controls">
         <button
-          className={`btn-control btn-record ${
-            listening ? "recording" : ""
-          }`}
+          className={`btn-control btn-record ${listening ? "recording" : ""}`}
           onClick={handleSpeak}
           disabled={isLocked || loading}
         >
           <Mic size={18} />
-          {listening ? "Listening..." : "Speak"}
+          {listening ? "Lyssnar..." : "Tala in"}
         </button>
 
         <button
@@ -152,39 +118,39 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
             <Loader2 className="animate-spin" size={18} />
           ) : (
             <>
-              <Send size={18} /> Check
+              <Send size={18} /> Rätta
             </>
           )}
         </button>
       </div>
 
       {feedback && (
-        <>
-          <div className="ai-feedback">
+        <div className="feedback-section">
+          <div className="ai-feedback-box">
             <strong>AI Feedback:</strong>
             <p>{feedback}</p>
           </div>
 
           <div className="feedback-animation">
             {isCorrect ? (
-              <div className="happy-anim">
-                <div className="character">🧑‍🎓🎩</div>
-                <div className="fireworks">🎆 🎆 🎆</div>
-                <div className="cheer">Hurra! Bra jobbat!</div>
+              <div className="anim-container">
+                <div className="anim-char">🧑‍🎓</div>
+                <div className="anim-text success">Hurra! Bra jobbat!</div>
               </div>
             ) : (
-              <div className="sad-anim">
-                <div className="character">😕</div>
-                <div className="boo">Försök igen!</div>
+              <div className="anim-container">
+                <div className="anim-char">😕</div>
+                <div className="anim-text error">Försök igen!</div>
               </div>
             )}
           </div>
-        </>
+        </div>
       )}
 
       {isLocked && (
         <div className="lock-overlay">
-          <Lock size={16} /> Endast i fullversionen
+          <Lock size={16} className="lock-icon-inline"/> 
+          Endast i fullversionen
         </div>
       )}
     </div>

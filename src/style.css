@@ -17,13 +17,10 @@ html, body {
 :root {
   --primary: #4f46e5;
   --primary-hover: #4338ca;
-
   --text-muted: #64748b;
   --border: #e5e7eb;
-
   --bg-soft: #f8fafc;
   --bg-dark: #0c2869;
-
   --radius: 14px;
 }
 
@@ -60,7 +57,7 @@ main {
   background: var(--bg-soft);
 }
 
-/* HERO */
+
 .hero-title {
   font-size: 2.8rem;
   font-weight: 800;
@@ -79,7 +76,7 @@ main {
   justify-content: center;
   gap: 1rem;
 }
-/* HERO BACKGROUND */
+
 
 .hero {
   background: linear-gradient(
@@ -99,8 +96,6 @@ main {
   box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
 }
 
-
-/* BUTTONS  */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -115,6 +110,9 @@ main {
 .btn-primary {
   background: var(--primary);
   color: white;
+}
+.btn-full-width {
+  width: 100%;
 }
 
 .btn-primary:hover {
@@ -131,7 +129,6 @@ main {
   color: white;
 }
 
-/* VIDEO*/
 .video-wrapper {
   width: 100%;
   position: relative;
@@ -168,15 +165,12 @@ main {
   gap: 0.5rem;
 }
 
-/* STORIES*/
+
 .stories-grid {
   margin-top: 3rem;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  
-  
-  
+  gap: 2rem;  
 }
 
 .story-card {
@@ -219,7 +213,7 @@ main {
   font-size: 0.85rem;
   color: var(--text-muted);
 }
-/* NAVBAR */
+
 .navbar {
   position: sticky;
   top: 0;
@@ -238,7 +232,7 @@ main {
   justify-content: space-between;
 }
 
-/* LEFT */
+
 .navbar-left {
   display: flex;
   align-items: center;
@@ -262,14 +256,14 @@ main {
   color: var(--text-muted);
 }
 
-/* RIGHT */
+
 .navbar-right {
   display: flex;
   align-items: center;
   gap: 1.25rem;
 }
 
-/* LINKS */
+
 .navbar-link {
   background: none;
   border: none;
@@ -282,14 +276,14 @@ main {
   color: var(--primary);
 }
 
-/* DROPDOWN */
+
 .navbar-dropdown {
   position: relative;
 }
 
 .navbar-dropdown-menu {
   position: absolute;
-  top: 120%;
+  top: 100%;
   left: 0;
   background: white;
   border: 1px solid var(--border);
@@ -316,7 +310,7 @@ main {
   background: var(--bg-soft);
 }
 
-/* BUTTONS */
+
 .navbar-btn {
   padding: 0.6rem 1.2rem;
   border-radius: 10px;
@@ -339,7 +333,7 @@ main {
 }
 
 
-/* PRICING */
+
 .pricing-section {
   background: linear-gradient(180deg, #0f172a, #020617);
 }
@@ -397,10 +391,10 @@ main {
   padding: 0.3rem 0.7rem;
   border-bottom-left-radius: 8px;
 }
-/* AUTH / LOGIN / REGISTER */
+
 
 .auth-container {
-  min-height: calc(100vh - 80px); /* under navbar */
+  min-height: calc(100vh - 80px); 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -419,7 +413,7 @@ main {
   text-align: center;
 }
 
-/* Avatar circle */
+
 .auth-card .avatar,
 .auth-avatar {
   width: 56px;
@@ -435,7 +429,7 @@ main {
   font-size: 1.25rem;
 }
 
-/* Titles */
+
 .auth-card h1,
 .auth-card h2 {
   font-size: 1.5rem;
@@ -448,7 +442,7 @@ main {
   margin-bottom: 1.5rem;
 }
 
-/* Inputs */
+
 .auth-card input {
   width: 100%;
   padding: 0.75rem 1rem;
@@ -458,14 +452,19 @@ main {
   margin-bottom: 1rem;
 }
 
-/* Button full width */
+
 .auth-card .btn {
   width: 100%;
   justify-content: center;
 }
+.auth-error {
+  color: #ef4444;      
+  margin-bottom: 1rem;  
+  font-weight: 600;     
+  font-size: 0.9rem;   
+}
 
 
-/* Footer */
 .footer {
   border-top: 1px solid var(--border-color);
   padding: 3rem 1rem;
@@ -499,8 +498,6 @@ main {
 }
 
 
-/* CONTACT PAGE */
-
 .contact-wrapper {
   max-width: 1100px;
   margin: 4rem auto;
@@ -533,7 +530,7 @@ main {
   margin-bottom: 1.2rem;
 }
 
-/* FORM */
+
 .contact-form {
   background: white;
   border-radius: var(--radius);
@@ -565,13 +562,15 @@ main {
 .contact-form button {
   width: 100%;
 }
-
-
-
-/* RESPONSIVE */
-@media (max-width: 900px) {
-  
+.success-heading {
+  margin-top: 1rem;
 }
+
+.success-text {
+  margin: 1rem 0;
+  color: #64748b; 
+}
+
 
 @media (max-width: 900px) {
   .stories-grid,

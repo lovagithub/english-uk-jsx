@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Lock, ShoppingCart, Loader2 } from "lucide-react";
+import { Lock, ShoppingCart, Loader2, BookOpen } from "lucide-react"; 
 import ExerciseCard from "../components/ExerciseCard";
 import "../course.css";
 
@@ -10,8 +10,7 @@ const CoursePage = ({ currentUser }) => {
   const [buying, setBuying] = useState(false);
 
   const courseId = level === "a2" ? "C-ENG-A2" : "C-ENG-B1";
-  const courseTitle = `Engelsk Grammatik – Nivå ${level.toUpperCase()}`;
-
+  
   const hasAccess =
     currentUser?.courses?.some(
       (c) => c.course_id === courseId && c.paid
@@ -20,6 +19,10 @@ const CoursePage = ({ currentUser }) => {
   const handleBuy = () => {
     setBuying(true);
     navigate(`/buy/${level}`);
+  };
+
+  const goToVocabulary = () => {
+    navigate(`/course/${level}/vocabulary`);
   };
 
   const exercises =
@@ -89,6 +92,14 @@ const CoursePage = ({ currentUser }) => {
             </span>
           </h1>
           <p>Öva på att tala och skriva. Få omedelbar återkoppling.</p>
+          
+          
+         <button 
+            className="btn-control btn-vocabulary" 
+            onClick={goToVocabulary}>
+            <BookOpen size={20} />
+            Öva Ordförråd (Vocabulary)
+          </button>
         </div>
 
         <span className={`course-badge ${hasAccess ? "active" : "preview"}`}>

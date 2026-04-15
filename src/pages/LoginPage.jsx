@@ -1,58 +1,83 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
 const LoginPage = ({ onLogin }) => {
-  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  
+  useEffect(() => {
+    setEmail("");
+    setPassword("");
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError("");
 
-    try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
-      });
+    setTimeout(() => {
+      const storedUserJson = localStorage.getItem("registeredUser");
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Login failed");
+      if (!storedUserJson) {
+        setError("Ingen användare hittades. Har du registrerat dig?");
+        setLoading(false);
+        return;
       }
 
-      onLogin(data);
-      navigate("/");
-    } catch (err) {
-      alert("Kunde inte logga in: " + err.message);
-    } finally {
+      const storedUser = JSON.parse(storedUserJson);
+
+      if (storedUser.email === email && storedUser.password === password) {
+        onLogin(storedUser);
+        navigate("/");
+      } else {
+        setError("Fel e-post eller lösenord.");
+      }
       setLoading(false);
-    }
+    }, 800);
   };
 
   return (
     <div className="auth-container">
       <div className="auth-card">
         <h2>Logga in</h2>
+        <p className="navbar-subtitle">Använd dina sparade uppgifter.</p>
 
-        <form onSubmit={handleSubmit}>
+        {error && <p style={{color: 'red'}}>{error}</p>}
+
+       
+        <form onSubmit={handleSubmit} autoComplete="off">
           <input
-            type="text"
-            placeholder="Ditt namn"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            type="email"
+            placeholder="E-post"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
+            autoComplete="off" 
+            name="email_login_field" 
+          />
+          <input
+            type="password"
+            placeholder="Lösenord"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            autoComplete="new-password" 
+            name="password_login_field"
           />
 
-          <button disabled={loading} className="btn btn-primary">
+          <button disabled={loading} className="btn btn-primary" style={{width: "100%"}}>
             {loading ? <Loader2 className="animate-spin" /> : "Logga in"}
           </button>
         </form>
 
-        <Link to="/register">Skapa konto</Link>
+        <div className="auth-footer">
+          Har du inget konto? <Link to="/register">Registrera dig</Link>
+        </div>
       </div>
     </div>
   );

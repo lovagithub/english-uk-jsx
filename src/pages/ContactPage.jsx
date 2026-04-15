@@ -29,19 +29,22 @@ const ContactPage = () => {
       <section className="section">
         <div className="container text-center">
           <Send size={40} className="text-primary" />
-          <h2 style={{ marginTop: "1rem" }}>Tack för ditt meddelande!</h2>
-          <p style={{ margin: "1rem 0", color: "var(--text-muted)" }}>
+          
+          <h2 className="success-heading">Tack för ditt meddelande!</h2>
+          
+          <p className="success-text">
             Vi återkommer så snart som möjligt.
           </p>
+          
           <button className="btn btn-primary" onClick={() => navigate("/")}>
             Tillbaka till startsidan
           </button>
         </div>
-      </section>
+</section>
     );
   }
 
-  /* FORM  */
+  
   return (
     <section className="section">
       <div className="contact-wrapper">
