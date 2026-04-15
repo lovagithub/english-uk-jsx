@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+
 import NavBar from "./components/NavBar.jsx";
 import Footer from "./components/Footer.jsx";
+
 import LandingPage from "./pages/LandingPage.jsx";
 import ContactPage from "./pages/ContactPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
@@ -10,13 +12,10 @@ import ProfilePage from "./pages/ProfilePage.jsx";
 import BuyCourse from "./pages/BuyCourse.jsx";
 import CoursePage from "./pages/CoursePage.jsx"; 
 import ExternalApiCourse from "./pages/ExternalApiCourse.jsx";
-import A2Preview from "./pages/A2Preview.jsx";
-import B1Preview from "./pages/B1Preview.jsx";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
-
 
   useEffect(() => {
     const sessionUser = localStorage.getItem("activeSession");
@@ -25,11 +24,10 @@ function App() {
     }
   }, []);
 
-
   const handleLogin = (userData) => {
     setCurrentUser(userData);
     localStorage.setItem("activeSession", JSON.stringify(userData));
-    navigate("/profile"); 
+    navigate("/profile");
   };
 
   const handleLogout = () => {
@@ -47,12 +45,39 @@ function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
         <Route path="/register" element={<RegisterPage onLogin={handleLogin} />} />
-        <Route path="/preview/a2" element={<A2Preview />} />
-        <Route path="/preview/b1" element={<B1Preview />} />     
-        <Route path="/profile" element={currentUser ? (<ProfilePage currentUser={currentUser} />) : (<Navigate to="/login" replace />)}/>
-        <Route path="/course/:level" element={currentUser ? (<CoursePage currentUser={currentUser} />) : (<Navigate to="/login" replace />)} />
-        <Route path="/course/:level/vocabulary"element={currentUser ? (<ExternalApiCourse />) : (<Navigate to="/login" replace />)}/>
-        <Route path="/buy/:level"element={currentUser ? (<BuyCourse currentUser={currentUser} />) : (<Navigate to="/login" replace />)}/>
+
+        <Route
+          path="/profile"
+          element={
+            currentUser
+              ? <ProfilePage currentUser={currentUser} />
+              : <Navigate to="/login" replace />
+          }
+        />
+
+        <Route
+          path="/course/:level"
+          element={<CoursePage currentUser={currentUser} />}
+        />
+
+ 
+        
+          <Route
+            path="/course/:level/vocabulary"
+            element={<ExternalApiCourse />}
+          />
+          
+
+ 
+        <Route
+          path="/buy/:level"
+          element={
+            currentUser
+              ? <BuyCourse currentUser={currentUser} />
+              : <Navigate to="/login" replace />
+          }
+        />
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 

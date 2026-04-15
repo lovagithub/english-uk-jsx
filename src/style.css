@@ -12,7 +12,11 @@ html, body {
   color: #0f172a;
   min-height: 100%;
 }
-
+body {
+  background: linear-gradient(to bottom, #eef2ff, #ffffff);
+  min-height: 100vh;
+  background-attachment: fixed; 
+}
 
 :root {
   --primary: #4f46e5;

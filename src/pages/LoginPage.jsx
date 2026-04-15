@@ -8,7 +8,6 @@ const LoginPage = ({ onLogin }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
   
   useEffect(() => {
     setEmail("");
@@ -47,9 +46,9 @@ const LoginPage = ({ onLogin }) => {
         <h2>Logga in</h2>
         <p className="navbar-subtitle">Använd dina sparade uppgifter.</p>
 
-        {error && <p style={{color: 'red'}}>{error}</p>}
 
-       
+        {error && <p className="auth-error">{error}</p>}
+
         <form onSubmit={handleSubmit} autoComplete="off">
           <input
             type="email"
@@ -70,7 +69,10 @@ const LoginPage = ({ onLogin }) => {
             name="password_login_field"
           />
 
-          <button disabled={loading} className="btn btn-primary" style={{width: "100%"}}>
+          
+          <button 
+            disabled={loading} 
+            className="btn btn-primary btn-full-width">
             {loading ? <Loader2 className="animate-spin" /> : "Logga in"}
           </button>
         </form>

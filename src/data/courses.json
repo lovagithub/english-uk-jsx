@@ -1,0 +1,44 @@
+{
+  "courses": [
+    {
+      "id": "a2",
+      "title": "Engelska A2",
+      "courseId": "C-ENG-A2",
+      "price": 199,
+      "exercises": [
+        {
+          "id": "1",
+          "title": "Present Simple – Introductions",
+          "question": "Tell me your name and how old you are.",
+          "isPremium": false
+        },
+        {
+          "id": "2",
+          "title": "Daily Routine",
+          "question": "What do you usually do in the morning?",
+          "isPremium": false
+        },
+        {
+          "id": "3",
+          "title": "Past Simple – Last Weekend",
+          "question": "What did you do last Saturday?",
+          "isPremium": true
+        }
+      ]
+    },
+    {
+      "id": "b1",
+      "title": "Engelsk Grammatik – Nivå B1",
+      "courseId": "C-ENG-B1",
+      "price": 199,
+      "exercises": [
+        {
+          "id": "1",
+          "title": "Problem Solving",
+          "question": "Describe a situation where you had to solve a problem.",
+          "isPremium": false
+        }
+      ]
+    }
+  ]
+}

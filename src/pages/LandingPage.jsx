@@ -1,14 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Star, CheckCircle, ArrowRight, Play } from "lucide-react";
+import { Star, CheckCircle } from "lucide-react";
+import tutorVideo from "../assets/english_Tutor.mp4";
 
 const LandingPage = () => {
   const navigate = useNavigate();
 
   return (
     <main>
-
-      
       <section className="section hero">
         <div className="container text-center">
           <h1 className="hero-title">
@@ -23,40 +22,36 @@ const LandingPage = () => {
 
           <div className="hero-actions">
             <button
-           
               className="btn btn-primary"
-              onClick={() => navigate("/preview/a2")}
+              onClick={() => navigate("/course/a2")}
             >
               Start A2 Course
             </button>
 
             <button
-           
               className="btn btn-primary"
-              onClick={() => navigate("/preview/b1")}
+              onClick={() => navigate("/course/b1")}
             >
-
               Try B1 Level
             </button>
           </div>
         </div>
       </section>
 
-     <section className="section bg-soft">
+      <section className="section bg-soft">
         <div className="container text-center">
           <h2 className="section-title">How English Tutor Works</h2>
 
-            <div className="video-wrapper">
-              <video
-                src="/english_Tutor.mp4"
-                controls
-                preload="metadata"
-                playsInline
-              />
-            </div>
+          <div className="video-wrapper">
+            <video
+              src={tutorVideo}
+              controls
+              preload="metadata"
+              playsInline
+            />
+          </div>
         </div>
       </section>
-
 
       <section className="section">
         <div className="container">
@@ -69,21 +64,18 @@ const LandingPage = () => {
               {
                 name: "Lars",
                 level: "B1",
-                text:
-                  "I finally understood why 'I feel myself good' is wrong!"
+                text: "I finally understood why 'I feel myself good' is wrong!",
               },
               {
                 name: "Lisa",
                 level: "A2",
-                text:
-                  "The AI explains rules in English instantly."
+                text: "The AI explains rules in English instantly.",
               },
               {
                 name: "Anna",
                 level: "B2",
-                text:
-                  "Passing the interview was easy after practicing here."
-              }
+                text: "Passing the interview was easy after practicing here.",
+              },
             ].map((story, index) => (
               <div className="story-card" key={index}>
                 <div className="stars">
@@ -107,7 +99,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      
       <section className="section pricing-section">
         <div className="container text-center">
           <h2 className="section-title text-white">Simple Pricing</h2>
@@ -118,9 +109,15 @@ const LandingPage = () => {
               <div className="price">Free</div>
 
               <ul className="feature-list">
-                <li><CheckCircle size={18} /> First 3 A2 lessons</li>
-                <li><CheckCircle size={18} /> Text exercises</li>
-                <li><CheckCircle size={18} /> Basic grammar</li>
+                <li>
+                  <CheckCircle size={18} /> First 3 A2 lessons
+                </li>
+                <li>
+                  <CheckCircle size={18} /> Text exercises
+                </li>
+                <li>
+                  <CheckCircle size={18} /> Basic grammar
+                </li>
               </ul>
 
               <button
@@ -138,9 +135,15 @@ const LandingPage = () => {
               <div className="price">$9 / mo</div>
 
               <ul className="feature-list">
-                <li><CheckCircle size={18} /> Unlimited A2 & B1</li>
-                <li><CheckCircle size={18} /> Voice feedback</li>
-                <li><CheckCircle size={18} /> Advanced AI</li>
+                <li>
+                  <CheckCircle size={18} /> Unlimited A2 & B1
+                </li>
+                <li>
+                  <CheckCircle size={18} /> Voice feedback
+                </li>
+                <li>
+                  <CheckCircle size={18} /> Advanced AI
+                </li>
               </ul>
 
               <button
@@ -153,7 +156,6 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
-
     </main>
   );
 };
