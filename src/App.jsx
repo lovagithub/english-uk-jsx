@@ -35,6 +35,7 @@ function App() {
     localStorage.removeItem("activeSession");
     navigate("/");
   };
+ 
 
   return (
     <>
@@ -60,20 +61,16 @@ function App() {
           element={<CoursePage currentUser={currentUser} />}
         />
 
- 
-        
-          <Route
-            path="/course/:level/vocabulary"
-            element={<ExternalApiCourse />}
-          />
-          
+        <Route
+          path="/course/:level/vocabulary"
+          element={<ExternalApiCourse />}
+        />
 
- 
         <Route
           path="/buy/:level"
           element={
             currentUser
-              ? <BuyCourse currentUser={currentUser} />
+              ? <BuyCourse currentUser={currentUser} setCurrentUser={setCurrentUser} />
               : <Navigate to="/login" replace />
           }
         />

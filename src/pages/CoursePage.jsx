@@ -21,10 +21,16 @@ const CoursePage = ({ currentUser }) => {
     );
   }
 
-  const hasAccess =
-    currentUser?.courses?.some(
-      (c) => c.course_id === course.id && c.paid
-    ) || false;
+  const hasAccess = Boolean(
+  currentUser &&
+  currentUser.courses &&
+  course &&
+  currentUser.courses.some(
+    (c) => String(c.course_id).toLowerCase() === String(course.courseId).toLowerCase()
+      && c.paid === true
+  )
+);
+
 
   const handleBuy = () => {
     setBuying(true);

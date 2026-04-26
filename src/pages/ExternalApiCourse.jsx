@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../course.css"; 
 import { Mic, Volume2, RefreshCw, CheckCircle, XCircle } from "lucide-react";
 
@@ -9,7 +9,9 @@ const ExternalApiCourse = () => {
   
   const [listening, setListening] = useState(false);
   const [spokenText, setSpokenText] = useState("");
-  const [feedbackMsg, setFeedbackMsg] = useState(null); 
+  const [feedbackMsg, setFeedbackMsg] = useState(null);
+
+  const recognitionRef = useRef(null);
 
   const practiceWords = [
     "education", "technology", "nature", "science", "future", 
@@ -30,10 +32,10 @@ const ExternalApiCourse = () => {
     
     try {
       const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${randomWord}`);
-      if (!response.ok) throw new Error("Kunde inte hämta data");
+      if (!response.ok) throw new Error();
       const data = await response.json();
       setWordData(data[0]); 
-    } catch (err) {
+    } catch {
       setError("Kunde inte ladda övningen. Kontrollera din internetanslutning.");
     } finally {
       setLoading(false);
@@ -41,6 +43,12 @@ const ExternalApiCourse = () => {
   };
 
   const handleSpeak = () => {
+    if (listening && recognitionRef.current) {
+      recognitionRef.current.stop();
+      setListening(false);
+      return;
+    }
+
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
@@ -50,17 +58,21 @@ const ExternalApiCourse = () => {
 
     const recognition = new SpeechRecognition();
     recognition.lang = "en-US";
-    recognition.interimResults = false;
+    recognition.continuous = true;
+    recognition.interimResults = true;
     recognition.maxAlternatives = 1;
 
     recognition.onstart = () => {
       setListening(true);
-      setSpokenText("Lyssnar...");
+      setSpokenText("");
       setFeedbackMsg(null);
     };
 
     recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
+      let transcript = "";
+      for (let i = 0; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+      }
       setSpokenText(transcript);
       checkPronunciation(transcript);
     };
@@ -70,14 +82,22 @@ const ExternalApiCourse = () => {
       setSpokenText("Hörde inget, försök igen.");
     };
 
-    recognition.onend = () => setListening(false);
+    recognition.onend = () => {
+      setListening(false);
+    };
+
     recognition.start();
+    recognitionRef.current = recognition;
+
+    setTimeout(() => {
+      recognition.stop();
+    }, 4000);
   };
 
   const checkPronunciation = (transcript) => {
     if (!wordData) return;
     const correctWord = wordData.word.toLowerCase();
-    const userWord = transcript.toLowerCase().replace(/[.,!?]/g, ""); 
+    const userWord = transcript.toLowerCase().replace(/[.,!?]/g, "").trim();
 
     if (userWord === correctWord) {
       setFeedbackMsg("correct");

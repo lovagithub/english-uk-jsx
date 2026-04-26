@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-const BuyCourse = ({ currentUser }) => {
+const BuyCourse = ({ currentUser, setCurrentUser }) => {
   const { level } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -14,33 +14,33 @@ const BuyCourse = ({ currentUser }) => {
     setLoading(true);
 
     setTimeout(() => {
-      const storedUser = JSON.parse(localStorage.getItem("registeredUser"));
-      
+      const storedUser = JSON.parse(localStorage.getItem("activeSession"));
+
       if (!storedUser.courses) {
         storedUser.courses = [];
       }
 
-      const alreadyBought = storedUser.courses.find(c => c.course_id === courseId);
-      
+      const alreadyBought = storedUser.courses.find(
+        (c) => c.course_id === courseId
+      );
+
       if (!alreadyBought) {
         storedUser.courses.push({
           course_id: courseId,
           title: courseTitle,
           paid: true,
           demo: true,
-          course_start: new Date().toISOString()
+          course_start: new Date().toISOString(),
         });
-
-        localStorage.setItem("registeredUser", JSON.stringify(storedUser));
-        localStorage.setItem("activeSession", JSON.stringify(storedUser));
       }
+
+      localStorage.setItem("activeSession", JSON.stringify(storedUser));
+      setCurrentUser(storedUser);
 
       setLoading(false);
       alert("✅ Demo-köp genomfört!");
-      
-     
-      window.location.href = `/course/${level}`;
-      
+
+      navigate(`/course/${level}`);
     }, 1500);
   };
 
@@ -50,7 +50,7 @@ const BuyCourse = ({ currentUser }) => {
         <h1>Köp kurs (Demo)</h1>
 
         <h3>Kvitto</h3>
-        
+
         <div className="receipt-section">
           <p><strong>Student:</strong> {currentUser.name}</p>
           <p><strong>E-post:</strong> {currentUser.email}</p>
@@ -58,7 +58,6 @@ const BuyCourse = ({ currentUser }) => {
 
         <hr />
 
-        
         <div className="receipt-section">
           <p><strong>Kurs:</strong> {courseTitle}</p>
           <p><strong>Pris:</strong> {price} SEK</p>
