@@ -12,12 +12,11 @@ const LandingPage = () => {
         <div className="container text-center">
           <h1 className="hero-title">
             Master English with <br />
-            <span className="text-primary">Instant AI Feedback</span>
+            <span className="text-primary">Instant feedback</span>
           </h1>
 
           <p className="hero-subtitle">
-            Don't just learn grammar rules. Speak, get corrected, and understand
-            your mistakes through literal English translations.
+            Don’t just learn grammar rules. Speak, get instant feedback, and practice your English interactively.
           </p>
 
           <div className="hero-actions">

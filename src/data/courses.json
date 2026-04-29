@@ -27,18 +27,60 @@
       ]
     },
     {
-      "id": "b1",
-      "title": "Engelsk Grammatik – Nivå B1",
-      "courseId": "C-ENG-B1",
-      "price": 199,
-      "exercises": [
-        {
-          "id": "1",
-          "title": "Problem Solving",
-          "question": "Describe a situation where you had to solve a problem.",
-          "isPremium": false
-        }
-      ]
+  "id": "b1",
+  "title": "Engelska B1",
+  "courseId": "C-ENG-B1",
+  "price": 199,
+  "exercises": [
+    {
+      "id": "1",
+      "title": "Problem Solving",
+      "question": "Describe a situation where you had to solve a problem.",
+      "isPremium": false
+    },
+    {
+      "id": "2",
+      "title": "Daily Routine",
+      "question": "Describe your daily routine on a typical weekday.",
+      "isPremium": false
+    },
+    {
+      "id": "3",
+      "title": "Travel Experience",
+      "question": "Talk about a trip you enjoyed and why it was special.",
+      "isPremium": true
+    },
+    {
+      "id": "4",
+      "title": "Future Plans",
+      "question": "What are your plans for the future? Explain your goals.",
+      "isPremium": true
+    },
+    {
+      "id": "5",
+      "title": "Learning English",
+      "question": "Why are you learning English and how do you practice?",
+      "isPremium": false
+    },
+    {
+      "id": "6",
+      "title": "Technology",
+      "question": "How has technology changed your daily life?",
+      "isPremium": true
+    },
+    {
+      "id": "7",
+      "title": "Free Time",
+      "question": "What do you like to do in your free time?",
+      "isPremium": false
+    },
+    {
+      "id": "8",
+      "title": "Work or Studies",
+      "question": "Describe your work or studies and what you enjoy about it.",
+      "isPremium": true
     }
+  ]
+}
   ]
 }

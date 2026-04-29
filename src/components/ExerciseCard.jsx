@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Lock, Mic, Send, Loader2 } from "lucide-react";
+import { checkAnswerWithAI } from "../services/geminiService";
 
 const ExerciseCard = ({ exercise, isPaidUser }) => {
   const isLocked = exercise.isPremium && !isPaidUser;
@@ -50,26 +51,48 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
     recognitionRef.current = recognition;
   };
 
-  const handleCheck = () => {
+  const handleCheck = async () => {
     if (isLocked || !answer.trim()) return;
 
     setLoading(true);
     setFeedback("");
     setIsCorrect(null);
 
-    setTimeout(() => {
-      const wordCount = answer.trim().split(/\s+/).length;
+    try {
+      const result = await checkAnswerWithAI(
+        exercise.question,
+        answer
+      );
 
-      if (wordCount < 3) {
-        setFeedback("Det var ett kort svar. Försök skriva en hel mening.");
+      if (!result) {
+        setFeedback("Kunde inte analysera svaret.");
         setIsCorrect(false);
       } else {
-        setFeedback("Bra jobbat! Din mening ser korrekt ut och svarar på frågan.");
-        setIsCorrect(true);
-      }
+        const lower = result.toLowerCase();
 
-      setLoading(false);
-    }, 1500);
+if (lower.includes("correct: yes")) {
+  setIsCorrect(true);
+} else if (lower.includes("correct: no")) {
+  setIsCorrect(false);
+} else {
+  setIsCorrect(false);
+}
+
+        if (result.toLowerCase().includes("correct: yes")) {
+  setIsCorrect(true);
+} else {
+  setIsCorrect(false);
+}
+
+        setFeedback(result);
+        setAnswer("");
+      }
+    } catch (err) {
+      setFeedback("AI kunde inte svara just nu.");
+      setIsCorrect(false);
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -91,7 +114,11 @@ const ExerciseCard = ({ exercise, isPaidUser }) => {
             : "Type or speak your answer..."
         }
         value={answer}
-        onChange={(e) => setAnswer(e.target.value)}
+        onChange={(e) => {
+  setAnswer(e.target.value);
+  setFeedback("");
+  setIsCorrect(null);
+}}
         disabled={isLocked || loading}
       />
 

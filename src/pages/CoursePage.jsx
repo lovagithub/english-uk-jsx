@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Lock, ShoppingCart, Loader2, BookOpen } from "lucide-react";
@@ -21,16 +20,15 @@ const CoursePage = ({ currentUser }) => {
     );
   }
 
-  const hasAccess = Boolean(
-  currentUser &&
-  currentUser.courses &&
-  course &&
-  currentUser.courses.some(
-    (c) => String(c.course_id).toLowerCase() === String(course.courseId).toLowerCase()
-      && c.paid === true
-  )
-);
+  const courseId = level === "a2" ? "C-ENG-A2" : "C-ENG-B1";
 
+  const hasAccess = Boolean(
+    currentUser?.courses?.some(
+      (c) =>
+        c.course_id.toLowerCase() === courseId.toLowerCase() &&
+        c.paid === true
+    )
+  );
 
   const handleBuy = () => {
     setBuying(true);
@@ -81,7 +79,7 @@ const CoursePage = ({ currentUser }) => {
           <Lock size={36} />
           <h3>Lås upp hela kursen</h3>
           <p>
-            Alla premiumövningar, röstigenkänning och personlig AI-feedback.
+            Alla premiumövningar, röstigenkänning och personlig autometeserad feedback.
           </p>
 
           <button
@@ -104,4 +102,3 @@ const CoursePage = ({ currentUser }) => {
 };
 
 export default CoursePage;
-

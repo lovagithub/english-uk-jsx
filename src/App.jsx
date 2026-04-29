@@ -10,19 +10,31 @@ import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import BuyCourse from "./pages/BuyCourse.jsx";
-import CoursePage from "./pages/CoursePage.jsx"; 
+import CoursePage from "./pages/CoursePage.jsx";
 import ExternalApiCourse from "./pages/ExternalApiCourse.jsx";
+
+
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const sessionUser = localStorage.getItem("activeSession");
-    if (sessionUser) {
-      setCurrentUser(JSON.parse(sessionUser));
+    const storedUser = localStorage.getItem("activeSession");
+    if (storedUser) {
+      setCurrentUser(JSON.parse(storedUser));
     }
+    setLoading(false);
   }, []);
+
+  useEffect(() => {
+    if (currentUser) {
+      localStorage.setItem("activeSession", JSON.stringify(currentUser));
+    } else {
+      localStorage.removeItem("activeSession");
+    }
+  }, [currentUser]);
 
   const handleLogin = (userData) => {
     setCurrentUser(userData);
@@ -35,7 +47,8 @@ function App() {
     localStorage.removeItem("activeSession");
     navigate("/");
   };
- 
+
+  if (loading) return null;
 
   return (
     <>
@@ -63,14 +76,19 @@ function App() {
 
         <Route
           path="/course/:level/vocabulary"
-          element={<ExternalApiCourse />}
+          element={<ExternalApiCourse currentUser={currentUser} />}
         />
 
         <Route
           path="/buy/:level"
           element={
             currentUser
-              ? <BuyCourse currentUser={currentUser} setCurrentUser={setCurrentUser} />
+              ? (
+                <BuyCourse
+                  currentUser={currentUser}
+                  setCurrentUser={setCurrentUser}
+                />
+              )
               : <Navigate to="/login" replace />
           }
         />

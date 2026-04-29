@@ -14,32 +14,41 @@ const BuyCourse = ({ currentUser, setCurrentUser }) => {
     setLoading(true);
 
     setTimeout(() => {
-      const storedUser = JSON.parse(localStorage.getItem("activeSession"));
+      const storedUser = currentUser;
 
-      if (!storedUser.courses) {
-        storedUser.courses = [];
-      }
+      const existingCourses = storedUser.courses || [];
 
-      const alreadyBought = storedUser.courses.find(
-        (c) => c.course_id === courseId
+      const alreadyBought = existingCourses.find(
+        (c) =>
+          c.course_id.toLowerCase() === courseId.toLowerCase()
       );
 
+      let updatedCourses = existingCourses;
+
       if (!alreadyBought) {
-        storedUser.courses.push({
-          course_id: courseId,
-          title: courseTitle,
-          paid: true,
-          demo: true,
-          course_start: new Date().toISOString(),
-        });
+        updatedCourses = [
+          ...existingCourses,
+          {
+            course_id: courseId,
+            title: courseTitle,
+            paid: true,
+            demo: true,
+            course_start: new Date().toISOString(),
+          },
+        ];
       }
 
-      localStorage.setItem("activeSession", JSON.stringify(storedUser));
-      setCurrentUser(storedUser);
+      const updatedUser = {
+        ...storedUser,
+        courses: updatedCourses,
+      };
+
+      localStorage.setItem("activeSession", JSON.stringify(updatedUser));
+      localStorage.setItem("registeredUser", JSON.stringify(updatedUser));
+
+      setCurrentUser(updatedUser);
 
       setLoading(false);
-      alert("✅ Demo-köp genomfört!");
-
       navigate(`/course/${level}`);
     }, 1500);
   };

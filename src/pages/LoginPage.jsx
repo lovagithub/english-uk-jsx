@@ -20,22 +20,27 @@ const LoginPage = ({ onLogin }) => {
     setError("");
 
     setTimeout(() => {
-      const storedUserJson = localStorage.getItem("registeredUser");
+      const activeSession = localStorage.getItem("activeSession");
+      const registeredUser = localStorage.getItem("registeredUser");
 
-      if (!storedUserJson) {
+      const userData = activeSession || registeredUser;
+
+      if (!userData) {
         setError("Ingen användare hittades. Har du registrerat dig?");
         setLoading(false);
         return;
       }
 
-      const storedUser = JSON.parse(storedUserJson);
+      const storedUser = JSON.parse(userData);
 
       if (storedUser.email === email && storedUser.password === password) {
         onLogin(storedUser);
+        localStorage.setItem("activeSession", JSON.stringify(storedUser));
         navigate("/");
       } else {
         setError("Fel e-post eller lösenord.");
       }
+
       setLoading(false);
     }, 800);
   };
@@ -45,7 +50,6 @@ const LoginPage = ({ onLogin }) => {
       <div className="auth-card">
         <h2>Logga in</h2>
         <p className="navbar-subtitle">Använd dina sparade uppgifter.</p>
-
 
         {error && <p className="auth-error">{error}</p>}
 
@@ -69,7 +73,6 @@ const LoginPage = ({ onLogin }) => {
             name="password_login_field"
           />
 
-          
           <button 
             disabled={loading} 
             className="btn btn-primary btn-full-width">

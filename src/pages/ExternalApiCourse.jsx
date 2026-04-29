@@ -58,8 +58,8 @@ const ExternalApiCourse = () => {
 
     const recognition = new SpeechRecognition();
     recognition.lang = "en-US";
-    recognition.continuous = true;
-    recognition.interimResults = true;
+    recognition.continuous = false;
+    recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
     recognition.onstart = () => {
@@ -77,10 +77,17 @@ const ExternalApiCourse = () => {
       checkPronunciation(transcript);
     };
 
-    recognition.onerror = () => {
-      setListening(false);
-      setSpokenText("Hörde inget, försök igen.");
-    };
+   recognition.onerror = (event) => {
+  console.log(event.error);
+
+  if (event.error === "no-speech") {
+    setSpokenText("Hörde inget, försök igen.");
+  } else {
+    setSpokenText("Mikrofonfel.");
+  }
+
+  setListening(false);
+};
 
     recognition.onend = () => {
       setListening(false);
@@ -88,11 +95,7 @@ const ExternalApiCourse = () => {
 
     recognition.start();
     recognitionRef.current = recognition;
-
-    setTimeout(() => {
-      recognition.stop();
-    }, 4000);
-  };
+};
 
   const checkPronunciation = (transcript) => {
     if (!wordData) return;
@@ -106,15 +109,25 @@ const ExternalApiCourse = () => {
     }
   };
 
-  if (loading) return (
-    <div className="course-page">
-      <div className="centered-message">
-        <p>Hämtar nytt ord...</p>
-      </div>
+ if (loading) return (
+  <div className="course-page">
+    <div className="centered-message">
+      <RefreshCw className="animate-spin" size={24} />
+      <p>Hämtar nytt ord från API...</p>
     </div>
-  );
-  
-  if (error) return <div className="course-page"><p>{error}</p></div>;
+  </div>
+);
+  if (error) return (
+  <div className="course-page">
+    <div className="centered-message">
+      <XCircle size={24} />
+      <p>{error}</p>
+      <button onClick={fetchRandomWordData}>
+        Försök igen
+      </button>
+    </div>
+  </div>
+);
 
   return (
     <div className="course-page">
@@ -149,12 +162,16 @@ const ExternalApiCourse = () => {
              )}
           </div>
 
-          <div className="definition-section">
-            <p><strong>Definition:</strong> {wordData.meanings[0].definitions[0].definition}</p>
-            {wordData.meanings[0].definitions[0].example && (
-                <p className="text-muted text-italic">
-                  " {wordData.meanings[0].definitions[0].example} "
-                </p>
+        <div className="definition-section">
+            <p>
+              <strong>Definition:</strong>{" "}
+              {wordData.meanings?.[0]?.definitions?.[0]?.definition || "Ingen definition"}
+            </p>
+
+            {wordData.meanings?.[0]?.definitions?.[0]?.example && (
+              <p className="text-muted text-italic">
+                "{wordData.meanings[0].definitions[0].example}"
+              </p>
             )}
           </div>
 
